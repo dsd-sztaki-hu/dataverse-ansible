@@ -1,6 +1,6 @@
 ---
 # dataverse.pb
-#Tudok-e pusholni?
+
 - name: Install Dataverse
   hosts: dataverse
   become: true
