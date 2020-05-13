@@ -7,6 +7,13 @@
         ansible_distribution_major_version == "8" and
         db.postgres.version < 10
 
+- name: debian version check
+  set_fact:
+    die: "only debian version 10 is supported (but you are welcome to try)"
+  when:
+    - ansible_distribution != "Debian"
+    - ansible_distribution_major_version != "10"
+
 - name: squawk
   debug:
     msg: '{{ die }}'

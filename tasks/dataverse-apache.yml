@@ -12,6 +12,23 @@
   when: ansible_os_family == "RedHat" and
         ansible_distribution_major_version == "7"
 
+- name: install Apache for Debian/Ubuntu
+  package: 
+    name: apache2
+    state: latest
+  when: ansible_os_family == "Debian"
+
+- name: install http proxy when SSL disabled
+  template:
+    src: http.proxy.conf.j2
+    dest: /etc/httpd/conf.d/http.proxy.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: ansible_os_family == "RedHat" and
+        ansible_distribution_major_version == "7"
+        and apache.ssl.enabled == false
+
 - name: install http proxy when SSL disabled
   template:
     src: http.proxy.conf.j2

@@ -8,6 +8,7 @@
   yum:
     name: epel-release
     state: latest
+  when: ansible_os_family == "RedHat"
 
 - name: RHEL8 needs codeready-builder
   rhsm_repository:
@@ -27,6 +28,12 @@
     packages:
     - R-core
     - R-core-devel
+  when: ansible_os_family == "RedHat"
+
+- name: install base packages
+  package:
+    name: r-base-core, r-base-dev
+  when: ansible_os_family == "Debian"
 
 - name: detect number of system cores
   set_fact:
