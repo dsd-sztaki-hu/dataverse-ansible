@@ -93,6 +93,14 @@
     path: /tmp/dvinstall
     owner: '{{ dataverse.glassfish.user }}'
 
+- name: copy install.py
+  copy:
+    src: install.py
+    dest: /tmp/dvinstall/install.py
+    owner: '{{ dataverse.glassfish.user }}'
+    group: '{{ dataverse.glassfish.group }}'
+    mode: 0600
+
 - name: fire off installer
   script: '/usr/bin/python /tmp/dvinstall/install.py -f --config_file=default.config --noninteractive > /tmp/dvinstall/install.out 2>&1'
   become: yes
