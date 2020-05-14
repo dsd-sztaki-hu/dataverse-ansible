@@ -171,8 +171,3 @@
   become: yes
   become_user: "{{ dataverse.glassfish.user }}"
   shell: "{{ glassfish_dir }}/bin/asadmin start-domain {{ dataverse.glassfish.domain }}"
-  when: ansible_os_family == "RedHat"
-
-- name: start glassfish on Debian/Ubuntu
-  service: name=glassfish state=started
-  when: ansible_os_family == "Debian"
