@@ -77,3 +77,11 @@
     - ansible_os_family == "Debian"
     - dataverse.thumbnails
   tags: prereqs
+
+- name: install curl on Debian/Ubuntu
+  package:
+    name: curl
+  when:
+    - ansible_os_family == "Debian"
+  tags: prereqs
+

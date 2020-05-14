@@ -512,7 +512,7 @@ if re.match(gfDomain+" not running", domain_status):
 
 # 4e. check if asadmin login works
 #gf_adminpass_status = subprocess.check_output([asadmincmd, "login", "--user="+gfAdminUser, "--passwordfile "+gfClientFile])
-gfAdminLoginStatus = subprocess.call([asadmincmd, "login", "--user="+gfAdminUser])
+#gfAdminLoginStatus = subprocess.call([asadmincmd, "login", "--user="+gfAdminUser])
 
 # 4f. configure glassfish by running the standalone shell script that executes the asadmin commands as needed.
 
