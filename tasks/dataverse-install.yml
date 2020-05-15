@@ -102,12 +102,12 @@
     mode: 0600
 
 - name: fire off installer
-  script: '/usr/bin/python /tmp/dvinstall/install.py -f --config_file=default.config --noninteractive > /tmp/dvinstall/install.out 2>&1'
+  shell: cmd='cd /tmp/dvinstall; /usr/bin/python /tmp/dvinstall/install.py -f --config_file=default.config --noninteractive > /tmp/dvinstall/install.out 2>&1'
   become: yes
   become_user: '{{ dataverse.glassfish.user }}'
-  args:
-    chdir: /tmp/dvinstall
-  
+#  args:
+#    chdir: /tmp/dvinstall
+
 # install.py doesn't currently log this output, nothing sensitive in install.out
 #- name: negate need for password aliases
 #  file:
