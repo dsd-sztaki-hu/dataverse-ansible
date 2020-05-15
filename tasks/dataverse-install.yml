@@ -107,16 +107,10 @@
   become_user: '{{ dataverse.glassfish.user }}'
   args:
     chdir: /tmp/dvinstall
-
+  
 # install.py doesn't currently log this output, nothing sensitive in install.out
 #- name: negate need for password aliases
 #  file:
 #    name: /tmp/as-setup.out
 #    mode: 0600
 #  ignore_errors: yes
-
-- name: set logging format
-  become: yes
-  become_user: "{{ dataverse.glassfish.user }}"
-  shell: "{{ glassfish_dir }}/bin/asadmin set-log-file-format {{ dataverse.glassfish.logformat }}"
-

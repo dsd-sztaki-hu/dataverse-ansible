@@ -6,15 +6,11 @@
   debug:
     msg: '##### POST-INSTALL GLASSFISH CONFIGURATION #####'
 
-- name: set siteurl
-  become: yes
-  become_user: "{{ dataverse.glassfish.user }}"
-  shell: '{{ glassfish_dir}}/bin/asadmin create-jvm-options "-Ddataverse.siteUrl={{ siteUrl_escaped }}"'
-
-- name: stop glassfish manually (systemd gums up the works)
-  become: yes
-  become_user: "{{ dataverse.glassfish.user }}"
-  shell: '{{ glassfish_dir }}/bin/asadmin stop-domain {{ dataverse.glassfish.domain }}'
+# Glassfish is not running here.
+#- name: stop glassfish manually (systemd gums up the works)
+#  become: yes
+#  become_user: "{{ dataverse.glassfish.user }}"
+#  shell: '{{ glassfish_dir }}/bin/asadmin stop-domain {{ dataverse.glassfish.domain }}'
 
 - name: start glassfish with systemd
   service: name=glassfish state=started
@@ -24,6 +20,16 @@
     port: 8009
     state: present
     timeout: "{{ dataverse.glassfish.timeout }}"
+
+- name: set siteurl
+  become: yes
+  become_user: "{{ dataverse.glassfish.user }}"
+  shell: '{{ glassfish_dir}}/bin/asadmin create-jvm-options "-Ddataverse.siteUrl={{ siteUrl_escaped }}"'
+
+- name: set logging format
+  become: yes
+  become_user: "{{ dataverse.glassfish.user }}"
+  shell: "{{ glassfish_dir }}/bin/asadmin set-log-file-format {{ dataverse.glassfish.logformat }}"
 
 # python installer does this now
 #- name: setup-all.sh kitchen sink configuration.

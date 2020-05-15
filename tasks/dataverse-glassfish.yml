@@ -120,6 +120,11 @@
         owner=root group=root mode=0644
   when: ansible_os_family == "RedHat"
 
+- name: install glassfish systemd conf file for Debian
+  template: src=glassfish.service.j2 dest=/etc/systemd/system/glassfish.service
+        owner=root group=root mode=0644
+  when: ansible_os_family == "Debian"
+
 - name: agent must be on glassfish classpath
   copy:
     src: '{{ dataverse.jacoco.home }}/lib/jacocoagent.jar'
@@ -154,13 +159,11 @@
     insertafter: '.*grizzly-npn-bootstrap-1.8.1.jar.*'
   when: dataverse.glassfish.zipurl is match(".*payara-5.201.*")
 
-- name: reload systemd on RedHat/CentOS7
+- name: reload systemd
   shell: systemctl daemon-reload
-  when: ansible_os_family == "RedHat"
 
-- name: enable glassfish on RedHat/CentOS7 - but don't start it with systemd during Ansible installation
+- name: enable glassfish - but don't start it with systemd during Ansible installation
   service: name=glassfish enabled=yes
-  when: ansible_os_family == "RedHat"
 
 - name: install glassfish upstart script for Debian/Ubuntu
   template: src=glassfish.conf.j2 dest=/etc/init
