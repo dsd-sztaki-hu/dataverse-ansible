@@ -15,6 +15,7 @@ apache:
       cert: 
       key: 
       interm: 
+  port: 80
 
 letsencrypt:
   enabled: false
