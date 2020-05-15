@@ -155,6 +155,11 @@
         owner=root group=root mode=0644
   when: ansible_os_family == "RedHat"
 
+- name: install solr systemd conf file for Debian
+  template: src=solr.service.j2 dest=/etc/systemd/system/solr.service
+        owner=root group=root mode=0644
+  when: ansible_os_family == "Debian"
+
 - name: increase resource limits for solr
   blockinfile:
     path: /etc/security/limits.conf
@@ -175,11 +180,11 @@
 
 - name: reload systemd
   shell: systemctl daemon-reload
-  when: ansible_os_family == "RedHat"
+#  when: ansible_os_family == "RedHat"
 
 - name: enable solr on boot, start solr
   service: name=solr enabled=yes state=started
-  when: ansible_os_family == "RedHat"
+#  when: ansible_os_family == "RedHat"
 
 - name: disable service account shell
   user:
