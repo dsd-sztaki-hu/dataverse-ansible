@@ -44,13 +44,12 @@
         dataverse_repo != "release"
 
 - include: dataverse-download.yml
-  tags: glassfish
+  tags:
+    - glassfish
+    - release
 
 - include: dataverse-glassfish.yml
   tags: glassfish
-
-- include: dataverse-get-release.yml
-  tags: release
 
 - include: solr.yml
   tags: solr
