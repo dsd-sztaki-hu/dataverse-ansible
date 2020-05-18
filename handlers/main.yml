@@ -14,4 +14,3 @@
 
 - name: enable and restart shibd
   service: name=shibd enabled=yes state=restarted
-
