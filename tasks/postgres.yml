@@ -6,16 +6,9 @@
     msg: '##### POSTGRES #####'
 
 - name: ansible postgres module wants python-psycopg2
-  yum:
+  package:
     name: python-psycopg2
     state: latest
-  when: ansible_os_family == "RedHat"
-
-- name: ansible postgres module wants python-psycopg2
-  apt:
-    name: python-psycopg2
-    state: latest
-  when: ansible_os_family == "Debian"
 
 - name: install postgres repo RPM
   yum:
@@ -87,6 +80,7 @@
   when: postgres_initdb.stat.exists == false and
         db.use_rds == false and
         ansible_os_family == "RedHat"
+  notify: enable and restart postgres
 
 - name: install pg_hba.conf on RHEL/CentOS
   copy:
@@ -97,6 +91,7 @@
     mode: 0644
   when: ansible_os_family == "RedHat" and
         db.use_rds == false
+  notify: enable and restart postgres
 
 - name: install pg_hba.conf on Debian
   copy:
@@ -107,6 +102,7 @@
     mode: 0644
   when: ansible_os_family == "Debian" and
         db.use_rds == false
+  notify: enable and restart postgres
 
 
 - name: log_lock_waits when told
@@ -117,6 +113,7 @@
   when: db.postgres.log_lock_waits == true and
         db.use_rds == false and
         ansible_os_family == "RedHat"
+  notify: enable and restart postgres
 
 - name: log_lock_waits when told
   lineinfile:
@@ -126,34 +123,7 @@
   when: db.postgres.log_lock_waits == true and
         db.use_rds == false and
         ansible_os_family == "Debian"
-
-- name: enable postgres on RHEL/CentOS
-  service:
-    name: 'postgresql-{{ db.postgres.version }}'
-    enabled: yes
-  when: db.use_rds == false and
-        ansible_os_family == "RedHat"
-
-- name: enable postgres on Debian
-  service:
-    name: 'postgresql'
-    enabled: yes
-  when: db.use_rds == false and
-        ansible_os_family == "Debian"
-
-- name: start postgres on RHEL/CentOS
-  service:
-    name: 'postgresql-{{ db.postgres.version }}'
-    state: started
-  when: db.use_rds == false and
-        ansible_os_family == "RedHat"
-
-- name: start postgres on Debian
-  service:
-    name: 'postgresql'
-    state: restarted
-  when: db.use_rds == false and
-        ansible_os_family == "Debian"
+  notify: enable and restart postgres
 
 - name: dataverse python installer wants to be a postgres admin
   postgresql_user:
