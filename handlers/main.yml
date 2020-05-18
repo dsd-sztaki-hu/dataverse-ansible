@@ -1,0 +1,17 @@
+---
+
+- name: enable and restart httpd on RedHat/CentOS 7
+  service: name=httpd enabled=yes state=restarted
+  when:
+   - ansible_os_family == "RedHat"
+   - ansible_distribution_major_version == "7"
+  listen: enable and restart apache
+
+- name: enable and start apache2 on Debian
+  service: name=apache2 enabled=yes state=restarted
+  when: ansible_os_family == "Debian"
+  listen: enable and restart apache
+
+- name: enable and restart shibd
+  service: name=shibd enabled=yes state=restarted
+

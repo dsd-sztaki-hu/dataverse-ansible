@@ -28,6 +28,7 @@
     mode: 0644
   when: ansible_os_family == "RedHat" and
         use_pems == False
+  notify: enable and restart apache
 
 - name: copy ssl chain
   copy:
@@ -38,6 +39,7 @@
     mode: 0644
   when: ansible_os_family == "RedHat" and
         use_pems == False
+  notify: enable and restart apache
 
 - name: copy ssl key
   copy:
@@ -48,12 +50,15 @@
     mode: 0400
   when: ansible_os_family == "RedHat" and
         use_pems == False
+  notify: enable and restart apache
 
 - name: install http redirect template
-  template: src=http.redirect.conf.j2 dest=/etc/httpd/conf.d/http.redirect.conf
+  template: src=http.redirect.conf.j2 dest="{{ apache_config_dir }}/http.redirect.conf"
         owner=root group=root mode=0644
   when: ansible_os_family == "RedHat"
+  notify: enable and restart apache
 
 - name: install ssl proxy template
-  template: src=ssl.conf.j2 dest=/etc/httpd/conf.d/ssl.conf
+  template: src=ssl.conf.j2 dest="{{ apache_config_dir }}/ssl.conf"
   when: ansible_os_family == "RedHat"
+  notify: enable and restart apache

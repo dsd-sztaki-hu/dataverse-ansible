@@ -16,27 +16,36 @@
     state: latest
   when: ansible_os_family == "RedHat"
 
+- name: install Shibboleth for Debian/Ubuntu
+  package:
+    name: shibboleth-sp2-utils, libapache2-mod-shib2, libapache2-mod-jk
+    state: latest
+  when: ansible_os_family == "Debian"
+
 - name: install mod_ssl template
-  template: src=ssl.conf.j2 dest=/etc/httpd/conf.d/ssl.conf
+  template: src=ssl.conf.j2 dest="{{ apache_config_dir }}/ssl.conf"
         owner=root group=root mode=0644
-  when: ansible_os_family == "RedHat"
+  when: apache.ssl.enabled == true   # it may be that ssl is not provided by apache but a load balancer
 
 - name: install shibboleth2.xml template
   template: src=shibboleth2.xml.j2 dest=/etc/shibboleth/shibboleth2.xml
         owner=root group=root mode=0644
+  notify:
+    - enable and restart apache
+    - enable and restart shibd
 
 - name: copy attribute-map.xml file
   copy: src=attribute-map.xml dest=/etc/shibboleth/attribute-map.xml
         owner=root group=root mode=0644
+  notify:
+    - enable and restart apache
+    - enable and restart shibd
 
 - name: copy TestShib IdP metadata XML file
   copy: src=dataverse-idp-metadata.xml dest=/etc/shibboleth/dataverse-idp-metadata.xml
         owner=root group=root mode=0644
+  notify:
+    - enable and restart apache
+    - enable and restart shibd
 
-- name: enable and start shibd on RedHat / CentOS 7.
-  service: name=shibd enabled=yes state=started
-  when: ansible_os_family == "RedHat"
 
-- name: restart httpd on RedHat / CentOS 7.
-  service: name=httpd state=restarted
-  when: ansible_os_family == "RedHat"
