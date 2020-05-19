@@ -42,6 +42,7 @@
   with_items:
     - proxy
     - proxy_http
+    - proxy_ajp
   when: ansible_os_family == "Debian"    ## CHECKME -- does this need to be Debian-specific?
   notify: enable and restart apache
 
@@ -51,6 +52,13 @@
     state: absent
   when: ansible_os_family == "Debian"
   notify: enable and restart apache
+
+- name: change ports.conf
+  lineinfile:
+    path: "{{ apache_config_base_dir }}/ports.conf"
+    regexp: "^Listen "
+    line: "Listen {{ apache.port }}"
+  when: ansible_os_family == "Debian" ## TODO where is this in RedHat?
 
 - name: install http proxy when SSL disabled
   template:
