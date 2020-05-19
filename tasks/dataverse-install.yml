@@ -12,7 +12,7 @@
 
 - include: dataverse-build.yml
   when: dataverse_branch != "release"
-  
+
 - name: fix perms on dataverse-war
   file: path=/tmp/dvinstall/dataverse.war mode=0644
 
@@ -22,7 +22,7 @@
     dest: '/tmp/dvinstall/{{ item }}'
     mode: '0755'
   with_items:
-    - install.py
+#    - install.py ## we overwrite this anyway below
     - installConfig.py
     - installAppServer.py
     - installUtils.py
@@ -100,6 +100,7 @@
     owner: '{{ dataverse.glassfish.user }}'
     group: '{{ dataverse.glassfish.group }}'
     mode: 0600
+  register: copy_install_py
 
 - name: fire off installer
   shell:
@@ -109,6 +110,7 @@
   become_user: '{{ dataverse.glassfish.user }}'
 #  args:
 #    chdir: /tmp/dvinstall
+  when: copy_install_py.changed
 
 # install.py doesn't currently log this output, nothing sensitive in install.out
 #- name: negate need for password aliases

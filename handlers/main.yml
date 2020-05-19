@@ -32,3 +32,10 @@
   when: db.use_rds == false and
         ansible_os_family == "Debian"
   listen: enable and restart postgres
+
+- name: reload systemd
+  systemd: daemon_reload=true
+
+- name: enable and restart glassfish
+  service: name=glassfish enabled=yes state=restarted
+
