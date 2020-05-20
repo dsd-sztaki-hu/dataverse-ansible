@@ -38,6 +38,20 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
 {% for item in shibboleth.requestedAttributes %}
                 {{ item }}
 {% endfor %}
+            <!--
+               <md:ContactPerson contactType="ANSIBLE_VARS">
+                    <md:GivenName>ANSIBLE_VARS</md:GivenName>
+                    <md:SurName>ANSIBLE_VARS</md:SurName>
+                    <md:EmailAddress>ANSIBLE_VARS</md:EmailAddress>
+               </md:ContactPerson>
+               <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+                   <mdui:DisplayName xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:DisplayName>
+                   <mdui:Description xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:Description>
+                   <mdui:InformationURL xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:InformationURL>
+                   <mdui:PrivacyStatementURL xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:PrivacyStatementURL>                  
+                   <mdui:Logo height="ANSIBLE_VARS" width="ANSIBLE_VARS" xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:Logo>
+               </mdui:UIInfo>
+            -->
             </Handler>
 
             <!-- Status reporting service. -->
@@ -58,9 +72,21 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
         <!-- Loads and trusts a metadata file that describes only the Testshib IdP and how to communicate with it. -->
         <!-- IdPs we want allow go in /etc/shibboleth/dataverse-idp-metadata.xml -->
         <MetadataProvider type="XML" file="dataverse-idp-metadata.xml" backingFilePath="local-idp-metadata.xml" legacyOrgNames="true" reloadInterval="7200"/>
-
+        <!--
+          <MetadataProvider type="Dynamic" ignoreTransport="true">
+            <Subst>ANSIBLE_VARS/entities/$entityID</Subst>
+          </MetadataProvider>
+        -->
         <!-- Attribute and trust options you shouldn't need to change. -->
         <AttributeExtractor type="XML" validate="true" path="attribute-map.xml"/>
+        <!-- 
+          <AttributeExtractor type="Metadata" OrganizationName="ANSIBLE_VARS" OrganizationDisplayName="ANSIBLE_VARS"
+                            OrganizationURL="ANSIBLE_VARS">
+            <ContactPerson id="email" contactType="ANSIBLE_VARS" formatter="$EmailAddress"/>
+            <ContactPerson id="givenname" contactType="ANSIBLE_VARS" formatter="$GivenName"/>
+            <ContactPerson id="surname" contactType="ANSIBLE_VARS" formatter="$SurName"/>
+          </AttributeExtractor>
+        -->
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
 
