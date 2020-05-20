@@ -83,16 +83,6 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
         -->
         <!-- Attribute and trust options you shouldn't need to change. -->
         <AttributeExtractor type="XML" validate="true" path="attribute-map.xml"/>
-{% if shibboleth.organizationDisplayName is defined %}
-          <AttributeExtractor type="Metadata" OrganizationName="{{ shibboleth.organizationName }}" OrganizationDisplayName="{{ shibboleth.organizationDisplayName }}"
-                            OrganizationURL="{{ shibboleth.organizationURL }}">
-{% for item in shibboleth.contactPerson %}
-            <ContactPerson id="{{ item.type }}-email" contactType="{{ item.type }}" formatter="{{ item.emailAddress }}$EmailAddress"/>
-            <ContactPerson id="{{ item.type }}-givenname" contactType="{{ item.type }}" formatter="{{ item.givenName }}$GivenName"/>
-            <ContactPerson id="{{ item.type }}-surname" contactType="{{ item.type }}" formatter="{{ item.surName }}$SurName"/>
-{% endfor %}
-          </AttributeExtractor>
-{% endif %}
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
 
