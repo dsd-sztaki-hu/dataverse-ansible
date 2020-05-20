@@ -16,6 +16,8 @@ apache:
       key: 
       interm: 
   port: 80
+  behind_reverse_proxy: false
+  behind_ssl_reverse_proxy: false
 
 letsencrypt:
   enabled: false
