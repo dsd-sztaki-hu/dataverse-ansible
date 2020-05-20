@@ -38,20 +38,24 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
 {% for item in shibboleth.requestedAttributes %}
                 {{ item }}
 {% endfor %}
-            <!--
-               <md:ContactPerson contactType="ANSIBLE_VARS">
-                    <md:GivenName>ANSIBLE_VARS</md:GivenName>
-                    <md:SurName>ANSIBLE_VARS</md:SurName>
-                    <md:EmailAddress>ANSIBLE_VARS</md:EmailAddress>
+{% for item in shibboleth.contactPerson %}
+               <md:ContactPerson contactType="{{ item.type }}">
+                    <md:GivenName>{{ item.givenName }}</md:GivenName>
+                    <md:SurName>{{ item.surName }}</md:SurName>
+                    <md:EmailAddress>{{ item.emailAddress }}</md:EmailAddress>
                </md:ContactPerson>
+{% endfor %}
+{% for item in shibboleth.UIInfo %}
                <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
-                   <mdui:DisplayName xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:DisplayName>
-                   <mdui:Description xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:Description>
-                   <mdui:InformationURL xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:InformationURL>
-                   <mdui:PrivacyStatementURL xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:PrivacyStatementURL>                  
-                   <mdui:Logo height="ANSIBLE_VARS" width="ANSIBLE_VARS" xml:lang="ANSIBLE_VARS">ANSIBLE_VARS</mdui:Logo>
+                   <mdui:DisplayName xml:lang="{{ item.lang }}">{{ item.DisplayName }}</mdui:DisplayName>
+                   <mdui:Description xml:lang="{{ item.lang }}">{{ item.Description }}</mdui:Description>
+                   <mdui:InformationURL xml:lang="{{ item.lang }}">{{ item.InformationURL }}</mdui:InformationURL>
+                   <mdui:PrivacyStatementURL xml:lang="{{ item.lang }}">{{ item.PrivacyStatementURL }}</mdui:PrivacyStatementURL>
+{% if item.Logo is defined %}
+                   <mdui:Logo height="{{ item.Logo.height }}" width="{{ item.Logo.width }}" xml:lang="{{ item.lang }}">{{ item.Logo.url }}</mdui:Logo>
+{% endif %}
                </mdui:UIInfo>
-            -->
+{% endfor %}
             </Handler>
 
             <!-- Status reporting service. -->
@@ -79,14 +83,16 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
         -->
         <!-- Attribute and trust options you shouldn't need to change. -->
         <AttributeExtractor type="XML" validate="true" path="attribute-map.xml"/>
-        <!-- 
-          <AttributeExtractor type="Metadata" OrganizationName="ANSIBLE_VARS" OrganizationDisplayName="ANSIBLE_VARS"
-                            OrganizationURL="ANSIBLE_VARS">
-            <ContactPerson id="email" contactType="ANSIBLE_VARS" formatter="$EmailAddress"/>
-            <ContactPerson id="givenname" contactType="ANSIBLE_VARS" formatter="$GivenName"/>
-            <ContactPerson id="surname" contactType="ANSIBLE_VARS" formatter="$SurName"/>
+{% if shibboleth.organizationDisplayName is defined %}
+          <AttributeExtractor type="Metadata" OrganizationName="{{ shibboleth.organizationName }}" OrganizationDisplayName="{{ shibboleth.organizationDisplayName }}"
+                            OrganizationURL="{{ shibboleth.organizationURL }}">
+{% for item in shibboleth.contactPerson %}
+            <ContactPerson id="{{ item.type }}-email" contactType="{{ item.type }}" formatter="{{ item.emailAddress }}$EmailAddress"/>
+            <ContactPerson id="{{ item.type }}-givenname" contactType="{{ item.type }}" formatter="{{ item.givenName }}$GivenName"/>
+            <ContactPerson id="{{ item.type }}-surname" contactType="{{ item.type }}" formatter="{{ item.surName }}$SurName"/>
+{% endfor %}
           </AttributeExtractor>
-        -->
+{% endif %}
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
 
