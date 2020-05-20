@@ -31,15 +31,26 @@
   template: src=shibboleth2.xml.j2 dest=/etc/shibboleth/shibboleth2.xml
         owner=root group=root mode=0644
   notify:
-    - enable and restart apache
     - enable and restart shibd
 
 - name: copy attribute-map.xml file
   copy: src=attribute-map.xml dest=/etc/shibboleth/attribute-map.xml
         owner=root group=root mode=0644
-  notify:
-    - enable and restart apache
-    - enable and restart shibd
+  notify: enable and restart shibd
+
+- name: openssl configuration for shibboleth certificate
+  template: src=shibboleth-openssl.cnf.j2 dest=/etc/shibboleth/openssl.cnf backup=yes
+  register: shibboleth_openssl_conf
+
+- name: generate shibboleth certificate
+  shell: cd /etc/shibboleth/; openssl req -new -x509 -days 3652 -nodes -out sp-cert.pem -keyout sp-key.pem -batch -config openssl.cnf
+         creates=/etc/shibboleth/sp-cert.pem
+  when: shibboleth_openssl_conf.changed
+  notify: enable and restart shibd
+
+- name: set shibboleth certificate permissions
+  file: path=/etc/shibboleth/sp-key.pem owner=_shibd
+  notify: enable and restart shibd
 
 - name: copy TestShib IdP metadata XML file
   copy: src=dataverse-idp-metadata.xml dest=/etc/shibboleth/dataverse-idp-metadata.xml
@@ -47,5 +58,3 @@
   notify:
     - enable and restart apache
     - enable and restart shibd
-
-

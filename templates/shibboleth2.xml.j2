@@ -12,7 +12,7 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
     clockSkew="1800">
 
     <!-- FIXME: change the entityID to your hostname. -->
-    <ApplicationDefaults entityID="https://{{ servername }}/sp"
+    <ApplicationDefaults entityID="https://{{ dataverse.glassfish.siteurl }}/sp"
         REMOTE_USER="eppn" attributePrefix="AJP_">
 
         <!-- You should use secure cookies if at all possible.  See cookieProps in this Wiki article. -->
@@ -34,7 +34,11 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
             -->
 
             <!-- Extension service that generates "approximate" metadata based on SP configuration. -->
-            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
+            <Handler type="MetadataGenerator" Location="/Metadata" signing="false">
+{% for item in shibboleth.requestedAttributes %}
+                {{ item }}
+{% endfor %}
+            </Handler>
 
             <!-- Status reporting service. -->
             <Handler type="Status" Location="/Status" acl="127.0.0.1"/>

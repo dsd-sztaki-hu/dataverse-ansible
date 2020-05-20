@@ -206,6 +206,10 @@ s3:
 shibboleth:
   enabled: false
   repo: "http://download.opensuse.org/repositories/security:/shibboleth/CentOS_7/security:shibboleth.repo"
+  email:
+  organizationName:
+  organizationalUnitName:
+  requestedAttributes: []
 
 sshkeys:
   enabled: false
