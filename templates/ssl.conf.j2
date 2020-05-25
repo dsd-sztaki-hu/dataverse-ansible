@@ -43,6 +43,7 @@ SSLCryptoDevice builtin
   # don't pass paths used by Shibboleth to Glassfish
   ProxyPassMatch ^/Shibboleth.sso !
   ProxyPassMatch ^/shibboleth-ds !
+  ProxyPassMatch ^/shibboleth-sp !
 
   # allow munin
   ProxyPassMatch ^/munin !
@@ -50,10 +51,10 @@ SSLCryptoDevice builtin
   # pass everything else to Glassfish
   ProxyPass / ajp://localhost:8009/
 
-#  <Location /shib.xhtml>
-#    AuthType shibboleth
-#    ShibRequestSetting requireSession 1
-#    require valid-user
-#  </Location>
+  <Location /shib.xhtml>
+    AuthType shibboleth
+    ShibRequestSetting requireSession 1
+    require shibboleth
+  </Location>
 
 </VirtualHost>                                  
