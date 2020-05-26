@@ -24,12 +24,13 @@
         createhome=no comment="Dataverse Solr user"
   when: dataverse.solr.user != "root"
 
-- name: download and unzip solr
+- name: download solr
   get_url:
     url: "https://archive.apache.org/dist/lucene/solr/{{ dataverse.solr.version }}/solr-{{ dataverse.solr.version }}.tgz"
     checksum: "{{ dataverse.solr.checksum }}"
     dest: /tmp
   register: solr_installer_download
+  get_url: url="https://archive.apache.org/dist/lucene/solr/{{ dataverse.solr.version }}/solr-{{ dataverse.solr.version }}.tgz" dest=/tmp
 
 - name: untar solr
 #  shell: "tar xvzC /tmp -f /tmp/solr-{{ dataverse.solr.version }}.tgz"
