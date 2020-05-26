@@ -13,7 +13,7 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
 
     <!-- FIXME: change the entityID to your hostname. -->
     <ApplicationDefaults entityID="https://{{ dataverse.glassfish.siteurl }}/sp"
-        REMOTE_USER="eppn" attributePrefix="AJP_">
+        REMOTE_USER="eduPersonPrincipalName" attributePrefix="AJP_">
 
         <!-- You should use secure cookies if at all possible.  See cookieProps in this Wiki article. -->
         <!-- https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPSessions -->

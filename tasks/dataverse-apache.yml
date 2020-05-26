@@ -53,41 +53,34 @@
   when: ansible_os_family == "Debian"
   notify: enable and restart apache
 
-- name: change ports.conf
-  lineinfile:
-    path: "{{ apache_config_base_dir }}/ports.conf"
-    regexp: "^Listen "
-    line: "Listen {{ apache.port }}"
-  when: ansible_os_family == "Debian" ## TODO where is this in RedHat?
+- name: install own ports.conf on Debian
+  template:
+    src: ports.conf.j2
+    dest: "{{ apache_config_base_dir }}/ports.conf"
+  when: ansible_os_family == "Debian" ## TODO where is this in RedHat? ## it would be nicer to use than the Listen statement at the start of the virtualhost
 
-- name: install http proxy when SSL disabled
+- name: install unified http proxy config
   template:
     src: http.proxy.conf.j2
     dest: "{{ apache_virtualhost_dir }}/http.proxy.conf"
     owner: root
     group: root
     mode: '0644'
-  when: apache.ssl.enabled == false
   notify: enable and restart apache
-
-- include: dataverse-apache-ssl.yml
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version == "7"
-    - apache.ssl.enabled == true
-    - letsencrypt.enabled == false
 
 - include: certbot.yml
   when:
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version == "7"
-    - apache.ssl.enabled == true
-    - letsencrypt.enabled == true
+    - apache.ssl.enabled
+    - letsencrypt.enabled
+
+- include: dataverse-apache-ssl.yml
+  when:
+    - letsencrypt.enabled == false
 
 - name: install proxy error boilerplate
   copy: src=503.html dest="{{ apache_config_dir }}" owner=root group=root mode=0644
-  when: ansible_os_family == "RedHat" and
-        ansible_distribution_major_version == "7"
   notify: enable and restart apache
 
 - name: run handlers -- this runs the apache restart scripts

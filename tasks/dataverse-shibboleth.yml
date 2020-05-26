@@ -22,11 +22,6 @@
     state: latest
   when: ansible_os_family == "Debian"
 
-- name: install mod_ssl template
-  template: src=ssl.conf.j2 dest="{{ apache_config_dir }}/ssl.conf"
-        owner=root group=root mode=0644
-  when: apache.ssl.enabled == true   # it may be that ssl is not provided by apache but a load balancer
-
 - name: install shibboleth2.xml template
   template: src=shibboleth2.xml.j2 dest=/etc/shibboleth/shibboleth2.xml
         owner=root group=root mode=0644
@@ -73,5 +68,13 @@
     body_format: json
     remote_src: yes
     status_code: 201
-#  delegate_to: "{{ ansible_host }}"
-#  when: shibAuthProvider_json_download.changed
+  when: shibAuthProvider_json_download.changed
+
+- name: enable apache shib module on Debian
+  apache2_module:
+    state: present
+    name: "{{ item }}"
+  with_items:
+    - shib2
+  when: ansible_os_family == "Debian"    ## CHECKME -- does this need to be Debian-specific?
+  notify: enable and restart apache

@@ -2,8 +2,10 @@
 
   ServerName {{ servername }}
 
-  RewriteEngine On
-  RewriteCond %{HTTPS} !=on
-  RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+  <IfModule mod_rewrite>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+  </IfModule>
 
 </VirtualHost>
