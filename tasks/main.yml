@@ -31,10 +31,6 @@
 - include: dataverse-apache.yml
   tags: apache
 
-- include: dataverse-shibboleth.yml
-  when: shibboleth.enabled == True
-  tags: shibboleth
-
 - include: postgres.yml
   tags: postgres
 
@@ -74,6 +70,10 @@
 - include: dataverse-postinstall.yml
   tags: postinstall
   when: need_dataverse_install
+
+- include: dataverse-shibboleth.yml
+  when: shibboleth.enabled == True
+  tags: shibboleth
 
 - include: sampledata.yml
   when: dataverse.sampledata.enabled == true
