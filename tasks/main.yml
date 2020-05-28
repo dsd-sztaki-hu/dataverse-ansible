@@ -64,16 +64,18 @@
   when: localstack.enabled == true
   tags: localstack
 
+- include: dataverse-build.yml
+  when: dataverse_branch != "release"
+
+#- debug: msg="dataverse_zip_download.changed= {{ dataverse_zip_download.changed }}   dataverse_build_war is defined= {{ dataverse_build_war is defined }}"
+
 - include: dataverse-install.yml
   tags: dataverse
+  when: dataverse_zip_download.changed or dataverse_build_war.changed
 
 - include: dataverse-postinstall.yml
   tags: postinstall
-  when: need_dataverse_install
-
-- include: dataverse-shibboleth.yml
-  when: shibboleth.enabled == True
-  tags: shibboleth
+  when: dataverse_zip_download.changed or dataverse_build_war.changed
 
 - include: sampledata.yml
   when: dataverse.sampledata.enabled == true
