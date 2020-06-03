@@ -22,7 +22,7 @@
     dest: '/tmp/dvinstall/{{ item }}'
     mode: '0755'
   with_items:
-#    - install.py ## we overwrite this anyway below
+    - install.py ## we overwrite this anyway below
     - installConfig.py
     - installAppServer.py
     - installUtils.py
