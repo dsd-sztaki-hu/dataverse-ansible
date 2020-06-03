@@ -131,27 +131,3 @@
   shell: 'curl -X PUT -d true http://localhost:8080/api/admin/settings/:AllowApiTokenLookupViaApi'
   when: dataverse.api.allow_lookup == true
 
-- name: unzip localization package
-  unarchive:
-    src: Localization.zip
-    dest: /opt
-    mode: '0700'
-
-- name: install locales
-  shell: "/opt/dv/dataverse-property-files/languageswitch.sh"
-
-- name: Copy citation.tsv
-  copy:
-    src: citation.tsv
-    dest: /tmp/citation.tsv
-    mode: '0600'
-
-- name: Add citation.tsv to dataverse
-  shell: 'curl http://localhost:8080/api/admin/datasetfield/load -H "Content-type: text/tab-separated-values" -X POST --upload-file /tmp/citation.tsv'
-  notify: enable and restart glassfish
-
-
-- name: flush handlers to restart glassfish if necessary
-  meta: flush_handlers
-
-

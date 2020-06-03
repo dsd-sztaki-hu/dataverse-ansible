@@ -1,0 +1,21 @@
+---
+
+# dataverse/tasks/dataverse-locale.yml
+
+- name: Installing locale selector
+  debug:
+    msg: '##### INSTALL LOCALE SELECTOR #####'
+
+- name: unzip localization package
+  unarchive:
+    src: Localization.zip
+    dest: /opt
+    mode: '0700'
+
+- name: install locales
+  shell: "/opt/dv/dataverse-property-files/languageswitch.sh"
+  notify: enable and restart glassfish
+
+- name: flush handlers to restart glassfish if necessary
+  meta: flush_handlers
+
