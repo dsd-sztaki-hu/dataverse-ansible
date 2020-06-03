@@ -79,6 +79,15 @@
   register: solr_release_files
   when: dataverse_branch == "release"
 
+- name: Edit solr config
+  blockinfile:
+    path: '/tmp/dvinstall/schema.xml'
+    insertafter: '^    <field name="filePersistentId" type="text_en" multiValued="false" stored="true" indexed="true"/>'
+    block: |
+                <field name="title_hu" type="text_hu" multiValued="false" stored="true" indexed="true"/>
+                <field name="dsDescriptionValue_hu" type="text_hu" multiValued="false" stored="true" indexed="true"/>
+                <field name="dsDescriptionDate_hu" type="date" stored="true" indexed="true"/>
+
 - name: "release: place solr schema"
   copy:
     src: '{{ item }}'
