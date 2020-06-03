@@ -19,6 +19,7 @@
   tags:
    - prereqs
    - apache
+   - dataverse
 
 - include: sshkeys.yml
   when: sshkeys.enabled == True
@@ -68,16 +69,18 @@
   tags: dataverse
   when: dataverse_branch != "release"
 
-#- debug: msg="dataverse_zip_download.changed= {{ dataverse_zip_download.changed }}   dataverse_build_war is defined= {{ dataverse_build_war is defined }}"
+#dataverse_zip_download.changed= {{ dataverse_zip_download }}
+#- debug: msg="dataverse_build_war_changed is defined={{ dataverse_build_war_changed is defined }}   dataverse_build_war_changed={{ dataverse_build_war_changed }} "
+#  tags: dataverse
 
 - include: dataverse-install.yml
   tags: dataverse
   when: (dataverse_zip_download is defined and dataverse_zip_download.changed) or
-        (dataverse_branch != "release" and dataverse_build_war.changed)
+        (dataverse_branch != "release" and dataverse_build_war_changed)
 
 - include: dataverse-postinstall.yml
   tags: postinstall
-  when: dataverse_zip_download.changed or dataverse_build_war.changed
+  when: dataverse_zip_download.changed or dataverse_build_war_changed
 
 - include: sampledata.yml
   when: dataverse.sampledata.enabled == true
