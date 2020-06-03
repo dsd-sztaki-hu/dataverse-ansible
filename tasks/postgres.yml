@@ -125,6 +125,9 @@
         ansible_os_family == "Debian"
   notify: enable and restart postgres
 
+- name: flush handlers to restart postgres
+  meta: flush_handlers
+
 - name: dataverse python installer wants to be a postgres admin
   postgresql_user:
     name: postgres
