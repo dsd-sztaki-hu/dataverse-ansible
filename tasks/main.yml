@@ -37,6 +37,7 @@
 
 - include: dataverse-branch.yml
   when: dataverse_branch != "release"
+  tags: dataverse
 
 - include: jacoco-download.yml
   when: dataverse.jacoco.enabled == true and
@@ -86,7 +87,7 @@
 
 - include: dataverse-postinstall.yml
   tags: postinstall
-  when: dataverse_zip_download.changed or dataverse_build_war_changed
+  when: need_dataverse_install
 
 - include: sampledata.yml
   when: dataverse.sampledata.enabled == true
