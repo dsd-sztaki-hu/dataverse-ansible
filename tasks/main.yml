@@ -69,6 +69,12 @@
   tags: dataverse
   when: dataverse_branch != "release"
 
+- set_fact:
+    dataverse_build_war_changed: false
+  when: dataverse_branch == "release"
+
+
+
 #dataverse_zip_download.changed= {{ dataverse_zip_download }}
 #- debug: msg="dataverse_build_war_changed is defined={{ dataverse_build_war_changed is defined }}   dataverse_build_war_changed={{ dataverse_build_war_changed }} "
 #  tags: dataverse
