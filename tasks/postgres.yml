@@ -5,12 +5,12 @@
   debug:
     msg: '##### POSTGRES #####'
 
-- name: ansible postgres module wants python-psycopg2
+- name: ansible postgres module wants python-psycopg2 on debian and RedHat 7
   package:
     name: python-psycopg2
     state: latest
   when: not (ansible_os_family == "RedHat" and
-        ansible_distribution_major_version == "8")
+             ansible_distribution_major_version == "8")
 
 - name: ansible postgres module wants python3-psycopg2
   dnf:
@@ -129,13 +129,13 @@
     path: '/etc/postgresql/{{ db.postgres.version }}/main/postgresql.conf'
     regexp: '^#log_lock_waits'
     line: 'log_lock_waits = on'
-  when: db.postgres.log_lock_waits == true and
-        db.use_rds == false and
-        ansible_os_family == "Debian"
+  when:
+   - ansible_os_family == "Debian"
+   - db.postgres.log_lock_waits
+   - not db.use_rds
   notify: enable and restart postgres
 
-- name: flush handlers to restart postgres
-  meta: flush_handlers
+- meta: flush_handlers
 
 - name: dataverse python installer wants to be a postgres admin
   postgresql_user:
