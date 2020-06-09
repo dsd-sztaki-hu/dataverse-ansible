@@ -92,11 +92,6 @@
         (dataverse_branch != "release" and dataverse_build_war_changed)
 
 - include: dataverse-storage.yml
-  tags: storage
-  when:
-   - need_dataverse_install is not defined or need_dataverse_install
-
-- include: dataverse-storage.yml
   when: dataverse.filesdirs[0] is defined
   tags: storage
 
