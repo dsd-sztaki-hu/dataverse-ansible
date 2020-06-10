@@ -106,6 +106,10 @@
 - include: dataverse-locale.yml
   tags: locale
 
+- include: dataverse-shibboleth.yml
+  when: shibboleth.enabled == True
+  tags: shibboleth
+
 - include: sampledata.yml
   when: dataverse.sampledata.enabled == true
   tags: sampledata
