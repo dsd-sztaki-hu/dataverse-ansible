@@ -97,6 +97,9 @@
 - include: dataverse-locale.yml
   tags: locale
 
+- include: dataverse-gui.yml
+  tags: gui
+
 - include: sampledata.yml
   when: dataverse.sampledata.enabled == true
   tags: sampledata

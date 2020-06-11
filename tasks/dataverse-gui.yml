@@ -1,0 +1,51 @@
+---
+
+# dataverse/tasks/dataverse-gui.yml
+
+- name: Applying GUI design
+  debug:
+    msg: '##### Applying GUI design #####'
+
+- name: Copy branding2 content
+  unarchive:
+    src: branding2.zip
+    dest: '{{ glassfish_dir }}/glassfish/domains/{{dataverse.glassfish.domain}}/applications/dataverse'
+    mode: '0600'
+
+- name: Copy fav content
+  unarchive:
+    src: fav.zip
+    dest: '{{ glassfish_dir }}/glassfish/domains/{{dataverse.glassfish.domain}}/applications/dataverse/resources/images/fav'
+    mode: '0600'
+
+- name: Add header
+  uri:
+    url: http://localhost:8080/api/admin/settings/:HeaderCustomizationFile
+    method: PUT
+    body: "{{ lookup('file', 'branding/custom-header.html') }}"
+    status_code: 200
+
+- name: Add css
+  uri:
+    url: http://localhost:8080/api/admin/settings/:StyleCustomizationFile
+    method: PUT
+    body: "{{ lookup('file', 'branding/custom-stylesheet.css') }}"
+    status_code: 200
+
+- name: Add logo
+  uri:
+    url: http://localhost:8080/api/admin/settings/:LogoCustomizationFile
+    method: PUT
+    body: /branding/topbanner001w425_darkbg.png
+    status_code: 200
+
+- name: Add copyright
+  uri:
+    url: http://localhost:8080/api/admin/settings/:FooterCopyright
+    method: PUT
+    body: SZTAKI
+    status_code: 200
+
+
+
+

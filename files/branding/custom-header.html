@@ -1,0 +1,36 @@
+<script>
+$(document).ready(function () {
+var navbarIcon = document.getElementsByClassName("custom-logo")[0];
+	
+   if(/*(URL=="/") || ((URL.indexOf("dataverse.xhtml")!=-1) 
+	|| (URL.indexOf("dataset.xhtml")!=-1) 
+	|| (URL.indexOf("file.xhtml")!=-1) 
+	|| (URL.indexOf("editdatafiles.xhtml")!=-1)
+	|| (URL.indexOf("dataverse-")!=-1)	
+	|| (URL.indexOf("/dataverse/")!=-1)
+	|| (URL.indexOf("/loginpage.xhtml")!=-1)
+	|| (URL.indexOf("/dashboard.xhtml")!=-1)
+	|| (URL.indexOf("/harvestsets.xhtml")!=-1)
+	|| (URL.indexOf("/harvestclients.xhtml")!=-1)
+	|| (URL.indexOf("/dataverseuser.xhtml")!=-1))*/ true){
+		navbarIcon.classList.add("hidden-logo");
+   	  window.onscroll=function(){
+	    var prevScrollpos = window.pageYOffset;
+	     if (prevScrollpos > 100) {
+		 navbarIcon.classList.remove("hidden-logo");
+	     } else {
+ 	         navbarIcon.classList.add("hidden-logo");
+	     }
+
+	  }
+	}else{
+	    navbarIcon.classList.remove("hidden-logo");
+	}
+})
+</script>
+
+<div id="topcustomheader" class="container">
+<img src="/branding/topbanner001_orangetransp.png" width="100%" />
+</div>
+
+<div id="headerspacer"></div>
