@@ -18,6 +18,7 @@
    - storage
    - postinstall
    - s3
+   - gui
 
 - include: rserve.yml
   when: rserve.install == true

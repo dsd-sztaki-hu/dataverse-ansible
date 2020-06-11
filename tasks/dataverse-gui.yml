@@ -2,34 +2,50 @@
 
 # dataverse/tasks/dataverse-gui.yml
 
+- name: create gui_file_path
+  set_fact:
+    gui_file_path: '{{ glassfish_dir }}/glassfish/domains/{{dataverse.glassfish.domain}}/applications/dataverse'
+
 - name: Applying GUI design
   debug:
     msg: '##### Applying GUI design #####'
 
-- name: Copy branding2 content
-  unarchive:
-    src: branding2.zip
-    dest: '{{ glassfish_dir }}/glassfish/domains/{{dataverse.glassfish.domain}}/applications/dataverse'
-    mode: '0600'
+- name: Copy favicon
+  copy:
+    src: fav/favicon.ico
+    dest: '{{ glassfish_dir }}/glassfish/domains/{{dataverse.glassfish.domain}}/applications/dataverse/resources/images/fav/favicon.ico'
+    mode: '0644'
 
-- name: Copy fav content
-  unarchive:
-    src: fav.zip
-    dest: '{{ glassfish_dir }}/glassfish/domains/{{dataverse.glassfish.domain}}/applications/dataverse/resources/images/fav'
-    mode: '0600'
+- name: Copy favicon-16x16 
+  copy:
+    src: fav/favicon-16x16.png
+    dest: '{{ glassfish_dir }}/glassfish/domains/{{dataverse.glassfish.domain}}/applications/dataverse/resources/images/fav/favicon-16x16.png'
+    mode: '0644'
+
+- name: Copy favicon-32x32 
+  copy:
+    src: fav/favicon-32x32.png
+    dest: '{{ glassfish_dir }}/glassfish/domains/{{dataverse.glassfish.domain}}/applications/dataverse/resources/images/fav/favicon-32x32.png'
+    mode: '0644'
+
+- name: copy branding
+  copy:
+    src: branding
+    dest: '{{ gui_file_path }}'
+    mode: '0644'
 
 - name: Add header
   uri:
     url: http://localhost:8080/api/admin/settings/:HeaderCustomizationFile
     method: PUT
-    body: "{{ lookup('file', 'branding/custom-header.html') }}"
+    body: "{{ gui_file_path }}/branding/custom-header.html"
     status_code: 200
 
 - name: Add css
   uri:
     url: http://localhost:8080/api/admin/settings/:StyleCustomizationFile
     method: PUT
-    body: "{{ lookup('file', 'branding/custom-stylesheet.css') }}"
+    body: "{{ gui_file_path }}/branding/custom-stylesheet.css"
     status_code: 200
 
 - name: Add logo
