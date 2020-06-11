@@ -107,9 +107,9 @@
 - include: dataverse-locale.yml
   tags: locale
 
-
 - include: dataverse-gui.yml
   tags: gui
+  when: dataverse.branding.enabled
 
 - include: dataverse-shibboleth.yml
   when: shibboleth.enabled == True
