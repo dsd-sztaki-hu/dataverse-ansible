@@ -177,7 +177,7 @@
   when: dataverse.glassfish.zipurl is match(".*payara-5.201.*")
   notify: enable and restart glassfish
 
-- name: install glassfish upstart script for Debian/Ubuntu
+- name: install glassfish upstart script for older Debian/Ubuntu
   template: src=glassfish.conf.j2 dest=/etc/init
             owner=root group=root mode=0644
   when:
@@ -187,9 +187,3 @@
 
 - name: flush hadlers to start glassfish and possibly reload systemd
   meta: flush_handlers
-
-#- name: start glassfish with asadmin so subsequent Ansible-initiated restarts succeed on RedHat/CentOS
-#  become: yes
-#  become_user: "{{ dataverse.glassfish.user }}"
-#  shell: "{{ glassfish_dir }}/bin/asadmin start-domain {{ dataverse.glassfish.domain }}"
-#  when: ansible_os_family == "RedHat"
