@@ -207,6 +207,7 @@
 - name: enable solr on boot, start solr
   service: name=solr enabled=yes state=started
 #  when: ansible_os_family == "RedHat"
+  notify: reindex solr
 
 - name: disable service account shell
   user:
