@@ -24,6 +24,7 @@
     - installAppServer.py
     - installUtils.py
     - as-setup.sh
+    - pgdriver/postgresql-42.2.12.jar
   #when: dataverse_branch != "release"
 
 - name: grab api setup scripts as well
@@ -110,12 +111,6 @@
     regexp: '^gfAdminLoginStatus'
     state: absent
 
-- name: patch install_ansible.py for available jdbc driver version
-  lineinfile:
-    path: /tmp/dvinstall/install_ansible.py
-    regexp: '^pgJdbcDriver '
-    line: 'pgJdbcDriver = "postgresql-42.2.9.jar"'
-
 - name: patch install_ansible.py so that it allows for java 11 also
   lineinfile:
     path: /tmp/dvinstall/install_ansible.py
@@ -146,7 +141,9 @@
   become: yes
   become_user: '{{ dataverse.glassfish.user }}'
   when: need_dataverse_install
-  notify: enable and restart glassfish
+  notify:
+   - enable and restart glassfish
+   - reindex solr
 
 # install.py doesn't currently log this output, nothing sensitive in install.out
 #- name: negate need for password aliases
