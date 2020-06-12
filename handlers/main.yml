@@ -40,7 +40,7 @@
 
 - name: reindex solr
   uri:
-    url: {{ item }}
+    url: "{{ item }}"
     method: GET
   with_items:
    - http://localhost:8080/api/admin/index/clear
