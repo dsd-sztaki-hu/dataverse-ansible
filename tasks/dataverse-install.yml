@@ -125,7 +125,7 @@
 
 - name: calculate detaverse install necessity
   set_fact:
-    need_dataverse_install: install_py.changed or dataverse_build_war_changed
+    need_dataverse_install: '{{ install_py.changed or dataverse_build_war_changed }}'
 
 - name: patch installAppServer.py so that FILES_DIR points to the correct location
   lineinfile:
@@ -143,7 +143,20 @@
   when: need_dataverse_install
   notify:
    - enable and restart glassfish
+   - enable and restart solr
    - reindex solr
+
+#- pause:
+#    seconds: 30
+#  when: need_dataverse_install
+
+- name: wait until glassfish main port is available (or at least it shuts down successfully)
+  wait_for:
+    port: 8080
+    delay: 5
+    timeout: 30
+  ignore_errors: yes
+  when: need_dataverse_install
 
 # install.py doesn't currently log this output, nothing sensitive in install.out
 #- name: negate need for password aliases

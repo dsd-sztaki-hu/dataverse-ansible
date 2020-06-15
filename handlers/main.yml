@@ -38,6 +38,9 @@
 - name: enable and restart glassfish
   service: name=glassfish enabled=yes state=restarted
 
+- name: enable and restart solr
+  service: name=solr enabled=yes state=restarted
+
 - name: reindex solr
   uri:
     url: "{{ item }}"
