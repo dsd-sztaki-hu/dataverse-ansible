@@ -6,9 +6,9 @@
   debug:
     msg: '##### INSTALL LOCALE SELECTOR #####'
 
-- name: unzip localization package
-  unarchive:
-    src: Localization.zip
+- name: copy localization package
+  copy:
+    src: dv
     dest: /opt
     mode: '0700'
 
