@@ -123,6 +123,15 @@
   when: dataverse.counter.enabled == true
   tags: counter
 
+- name: Truncate externaltools table
+  postgresql_table:
+    db: '{{ db.postgres.name }}'
+    name: externaltool
+    login_user: '{{ db.postgres.user }}'
+    login_password: '{{ db.postgres.pass }}'
+    truncate: yes
+  tags: truncate_ext_tools
+
 - include: dataverse-previewers.yml
   when: dataverse.previewers.enabled == true
   tags: previewers
