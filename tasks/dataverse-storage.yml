@@ -103,17 +103,22 @@
   changed_when: false
   with_items: "{{ dataverse_filestores_labels.stdout_lines }}"
 
+#- debug: msg="{{ dataverse_filestores_directories }}"
+
 - name: create list of dictionaries with dataverse file storage directories
   set_fact:
-    dataverse_filestores_onserver: "{{ (dataverse_filestores_types_onserver[item.item]!='file') |
+    dataverse_filestores_onserver: "{{ (dataverse_filestores_types_onserver[item[0].item]!='file') |
                                        ternary(dataverse_filestores_onserver,
                                                dataverse_filestores_onserver +
-                                                 [ { 'label': item.item,
-                                                     'path': item.stdout }
+                                                 [ { 'label': item[0].item,
+                                                     'path': item[1] }
                                                  ]
                                               )
                                     }}"
-  with_items: "{{ dataverse_filestores_directories.results }}"
+#  with_items: "{{ dataverse_filestores_directories.results }}"
+  with_subelements:
+   - '{{ dataverse_filestores_directories.results }}'
+   - stdout_lines
   vars:
     dataverse_filestores_onserver: []
 
@@ -124,11 +129,14 @@
     dataverse_filestores_labels_to_delete: "{{ dataverse_filestores_labels.stdout_lines | difference(dataverse_defined_filestores_labels_list) }}"
     dataverse_filestores_labels_to_create: "{{ dataverse_defined_filestores_labels_list | difference(dataverse_filestores_labels.stdout_lines) }}"
 
+#- name: check for duplicate dataverse.files.file.directory
+
 - name: calculate config lines to delete for filestores
   set_fact:
     to_delete_config_lines: "{{ to_delete_config_lines +
                                 [ '-Ddataverse.files.'+item.label+'.directory='+item.path ] }}"
   with_items: "{{ dataverse_filestores_to_delete }}"
+
 
 - name: calculate config lines to delete for labels
   set_fact:
