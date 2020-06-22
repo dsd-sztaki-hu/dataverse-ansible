@@ -17,7 +17,7 @@
     src: '{{ item }}'
     dest: '{{ favicon_file_path }}'
     mode: '0644'
-  with_fileglob: '{{ dataverse.branding.favicons_directory }}/*.ico'
+  with_fileglob: '{{ dataverse.branding.favicons_directory }}/*'
 
 - name: copy branding files
   copy:
