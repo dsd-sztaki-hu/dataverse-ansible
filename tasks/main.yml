@@ -9,7 +9,8 @@
   tags: prereqs
 
 - include: dataverse-prereqs.yml
-  tags: prereqs
+  tags:
+   - prereqs
 
 - include: dataverse-required-variables.yml
   tags:
@@ -29,6 +30,7 @@
    - prereqs
    - apache
    - dataverse
+   - postinstall
 
 - include: sshkeys.yml
   when: sshkeys.enabled == True
