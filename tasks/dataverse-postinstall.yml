@@ -16,7 +16,7 @@
   lineinfile:
     path:   '{{ glassfish_dir }}/glassfish/domains/{{ dataverse.glassfish.domain }}/config/domain.xml'
     regexp: 'dataverse.siteUrl'
-    line:   '        <jvm-options>-Ddataverse.siteUrl={{ siteUrl_escaped }}</jvm-options>'
+    line:   '        <jvm-options>-Ddataverse.siteUrl={{ siteUrl }}</jvm-options>'
     insertafter: '<jvm-options>-server</jvm-options>'
   notify: enable and restart glassfish
 
