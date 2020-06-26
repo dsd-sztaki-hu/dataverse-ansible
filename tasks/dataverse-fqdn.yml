@@ -31,6 +31,7 @@
 
 - set_fact:
     is_aws_environment: "{{ aws_uri_check.status == 200 }}"
+  when: is_aws_environment is not defined
 
 - name: if we're in EC2, get public hostname
   shell: 'curl http://169.254.169.254/latest/meta-data/public-hostname'
