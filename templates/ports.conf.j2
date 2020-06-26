@@ -4,6 +4,10 @@
 
 Listen {{ apache.port }}
 
+{% for item in apache.extraports %}
+Listen {{ item }}
+{% endfor %}
+
 <IfModule ssl_module>
     Listen {{ apache.ssl.port }}
 </IfModule>
