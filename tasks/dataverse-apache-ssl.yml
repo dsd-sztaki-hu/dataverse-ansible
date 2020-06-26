@@ -81,13 +81,23 @@
   set_fact:
     ssl_modules_state: "{{ apache.ssl.enabled | ternary ('present', 'absent') }}"
 
-- name: enable/diable apache ssl and rewrite mods on Debian
+- name: enable/diable apache ssl module on Debian
   apache2_module:
     state: "{{ ssl_modules_state }}"
     name: "{{ item }}"
     ignore_configcheck: true
   with_items:
     - ssl
-    - rewrite
   when: ansible_os_family == "Debian"    ## CHECKME -- does this need to be Debian-specific?
   notify: enable and restart apache
+
+- name: enable rewrite if ssl is enabled (but do not disable it otherwise, some other virtualhost may need it)
+  apache2_module:
+    state: present
+    name: rewrite
+    ignore_configcheck: true
+  when:
+   - ansible_os_family == "Debian"    ## CHECKME -- does this need to be Debian-specific?
+   - apache.ssl.enabled
+  notify: enable and restart apache
+
