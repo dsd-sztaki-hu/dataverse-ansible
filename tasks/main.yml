@@ -113,6 +113,9 @@
   when: shibboleth.enabled == True
   tags: shibboleth
 
+- include: dataverse-authproviders.yml
+  tags: oauth
+
 - include: sampledata.yml
   when: dataverse.sampledata.enabled == true
   tags: sampledata

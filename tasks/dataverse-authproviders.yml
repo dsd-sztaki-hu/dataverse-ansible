@@ -1,0 +1,12 @@
+- name: Adding auth providers
+  debug:
+    msg: '##### ADDING AUTHENTICATION PROVIDERS #####'
+
+- name: add orcid authentication
+  uri:
+    url: http://localhost:8080/api/admin/authenticationProviders
+    method: POST
+    body_format: json
+    body: "{{ lookup('template', 'orcid_public.json.j2') }}"
+    status_code: 201
+
