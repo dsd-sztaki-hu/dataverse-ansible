@@ -38,6 +38,20 @@ dataverse:
     blocked_policy: "localhost-only"
     location: "http://localhost:8080/api"
     test_suite: false
+  branding:
+    enabled: false
+    directory: "{{ playbook_dir }}/files/branding"
+    favicons_directory: "{{ playbook_dir }}/files/favicons"
+    fileSettings:
+     - setting: HeaderCustomizationFile
+       file: custom-header.html
+     - setting: StyleCustomizationFile
+       file: custom-stylesheet.css
+     - setting: LogoCustomizationFile
+       file: topbanner001w425_darkbg.png'
+    otherSettings:
+     - setting: FooterCopyright
+       value: Your institute name here
   copyright: "Your Institution"
   counter:
     enabled: false
@@ -98,6 +112,7 @@ dataverse:
     adminpass: notPr0d
     siteurl:
     timeout: 180
+    request_timeout: 1800
     root: /usr/local
     dir: glassfish5
     zipurl: https://search.maven.org/remotecontent?filepath=fish/payara/distributions/payara/5.201/payara-5.201.zip
@@ -107,8 +122,6 @@ dataverse:
     enabled: false
     home: /tmp/jacoco
     version: 0.8.1
-  java:
-    version: 1.8.0
   maxfileuploadsizeinbytes:
   memheap: 2048
   previewers:
@@ -126,20 +139,6 @@ dataverse:
     custom_sampledataverses: "{{ playbook_dir }}/custom_sampledata/dataverses"
     custom_sampleusers: "{{ playbook_dir }}/custom_sampledata/users"
     custom_samplefiles: "{{ playbook_dir }}/custom_sampledata/files"
-  branding:
-    enabled: false
-    directory: "{{ playbook_dir }}/files/branding"
-    favicons_directory: "{{ playbook_dir }}/files/favicons"
-    fileSettings:
-     - setting: HeaderCustomizationFile
-       file: custom-header.html
-     - setting: StyleCustomizationFile
-       file: custom-stylesheet.css
-     - setting: LogoCustomizationFile
-       file: topbanner001w425_darkbg.png'
-    otherSettings:
-     - setting: FooterCopyright
-       value: Your institute name here
   service_email: noreply@dataverse.yourinstitution.edu
   smtp: localhost # or the FQDN of your organization's SMTP relay
   solr:
@@ -158,6 +157,8 @@ dataverse:
   version: '4.20'
   checksum: 'sha256:e99c37794bf20b8ed28c2ee649de92950c1a950be4917339b7ba56abf85817f0'
 
+build_guides: false
+
 db:
   postgres:
     adminpass: DVn33dsth1s
@@ -174,6 +175,9 @@ db:
 grafana:
   grafana_user: 'admin'
   grafana_password: 'admin'
+
+java:
+  version: 1.8.0
 
 localstack:
   enabled: false

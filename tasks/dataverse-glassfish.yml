@@ -187,3 +187,9 @@
 
 - name: flush hadlers to start glassfish and possibly reload systemd
   meta: flush_handlers
+
+#- name: start glassfish with asadmin so subsequent Ansible-initiated restarts succeed on RedHat/CentOS
+#  become: yes
+#  become_user: "{{ dataverse.glassfish.user }}"
+#  shell: "{{ glassfish_dir }}/bin/asadmin start-domain {{ dataverse.glassfish.domain }}"
+#  when: ansible_os_family == "RedHat"

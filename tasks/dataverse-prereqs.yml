@@ -16,6 +16,14 @@
   when: ansible_os_family == "RedHat" and
         ansible_distribution_major_version == "7"
 
+- name: let's use the fastest mirror
+  lineinfile:
+    path: /etc/dnf/dnf.conf
+    line: 'fastestmirror=1'
+    insertafter: '^gpgcheck'
+  when: ansible_os_family == "RedHat" and
+        ansible_distribution_major_version == "8"
+
 - name: makecache on RedHat
   yum:
     update_cache: yes
@@ -40,7 +48,7 @@
 
 - name: install java-nnn-openjdk and other packages for RedHat/CentOS.
   yum:
-    name: ['java-{{ dataverse.java.version }}-openjdk-devel', 'python36', 'vim-enhanced']
+    name: ['java-{{ java.version }}-openjdk-devel', 'python36', 'vim-enhanced']
     state: latest
   when: ansible_os_family == "RedHat"
   tags: prereqs
@@ -84,3 +92,11 @@
   when:
     - ansible_os_family == "Debian"
   tags: prereqs
+
+- name: Dataverse installer calls /usr/bin/python explicitly
+  alternatives:
+    name: python
+    link: /usr/bin/python
+    path: '/usr/bin/python3'
+  when: ansible_os_family == "RedHat" and
+        ansible_distribution_major_version == "8"

@@ -36,7 +36,21 @@ dataverse:
     blocked_endpoints: "admin,test"
     blocked_policy: "localhost-only"
     location: "http://localhost:8080/api"
-    test_suite: false
+    test_suite: true
+  branding:
+    enabled: false
+    directory: "{{ playbook_dir }}/files/branding"
+    favicons_directory: "{{ playbook_dir }}/files/favicons"
+    fileSettings:
+     - setting: HeaderCustomizationFile
+       file: custom-header.html
+     - setting: StyleCustomizationFile
+       file: custom-stylesheet.css
+     - setting: LogoCustomizationFile
+       file: topbanner001w425_darkbg.png'
+    otherSettings:
+     - setting: FooterCopyright
+       value: Your institute name here
   copyright: "Your Institution"
   counter:
     enabled: false
@@ -96,17 +110,17 @@ dataverse:
     adminuser: admin
     adminpass: notPr0d
     timeout: 180
+    request_timeout: 1800
     siteurl: 
     root: /usr/local
     dir: payara5
     zipurl: https://search.maven.org/remotecontent?filepath=fish/payara/distributions/payara/5.201/payara-5.201.zip
+    zipchecksum: sha256:19fc1b472c003d7287e4671c061ee720ac408f3f56e74ba4a5c36b40ffdcd674
   google_analytics_key:
   jacoco:
     enabled: false
     home: /tmp/jacoco
     version: 0.8.1
-  java:
-    version: 1.8.0
   maxfileuploadsizeinbytes:
   memheap: 1024
   previewers:
@@ -141,6 +155,8 @@ dataverse:
   usermgmtkey: burrito
   version: '4.20'
 
+build_guides: false
+
 db:
   postgres:
     adminpass: DVn33dsth1s
@@ -157,6 +173,9 @@ db:
 grafana:
   grafana_user: 'admin'
   grafana_password: 'admin'
+
+java:
+  version: 1.8.0
 
 munin:
   install: false
