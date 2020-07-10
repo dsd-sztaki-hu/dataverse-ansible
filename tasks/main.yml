@@ -90,6 +90,9 @@
   when: (dataverse_zip_download is defined and dataverse_zip_download.changed) or
         (dataverse_branch != "release" and dataverse_build_war_changed)
 
+- include: dataverse-metadata.yml
+  tags: metadata
+
 - include: dataverse-storage.yml
   when: dataverse.filesdirs[0] is defined
   tags: storage
@@ -98,9 +101,6 @@
   tags: postinstall
   when:
    - need_dataverse_install is not defined or need_dataverse_install
-
-- include: dataverse-metadata.yml
-  tags: metadata
 
 - include: dataverse-locale.yml
   tags: locale

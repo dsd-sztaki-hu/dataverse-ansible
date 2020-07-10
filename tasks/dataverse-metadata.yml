@@ -2,6 +2,9 @@
 
 # dataverse/tasks/dataverse-metadata.yml
 
+- name: flushing handlers to start glassfish if needed
+  meta: flush_handlers
+
 - name: Updating metadata
   debug:
     msg: '##### UPDATING METADATA #####'
