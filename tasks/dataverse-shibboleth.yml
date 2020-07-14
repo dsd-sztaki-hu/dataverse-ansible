@@ -82,3 +82,13 @@
     - shib2
   when: ansible_os_family == "Debian"    ## CHECKME -- does this need to be Debian-specific?
   notify: enable and restart apache
+
+- name: "restart shibboleth daemon periodically -- it eats up memory"
+  cron:
+    name: "shibboleth restart"
+    cron_file: "ansible"
+    user: root
+    minute: "5"
+    hour: "5"
+    job: "service shibd restart"
+    backup: yes
