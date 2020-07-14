@@ -111,17 +111,17 @@
     regexp: '^gfAdminLoginStatus'
     state: absent
 
-- name: patch install_ansible.py so that it allows for java 11 also
-  lineinfile:
-    path: /tmp/dvinstall/install_ansible.py
-    regexp: '^   if not re.search."1.8", java_version.:'
-    line: '   if not (re.search("1.8", java_version) or re.search("11.", java_version)):'
+#- name: patch install_ansible.py so that it allows for java 11 also
+#  lineinfile:
+#    path: /tmp/dvinstall/install_ansible.py
+#    regexp: '^   if not re.search."1.8", java_version.:'
+#    line: '   if not (re.search("1.8", java_version) or re.search("11.", java_version)):'
 
-- name: patch install_ansible.py so that it allows for java 11 also
-  lineinfile:
-    path: /tmp/dvinstall/install_ansible.py
-    regexp: "^      sys.exit.\"Dataverse requires Java 1.8. Please install it, or make sure it's in your PATH, and try again\"."
-    line: "      sys.exit(\"Dataverse requires Java 1.8 or 11. Please install it, or make sure it's in your PATH, and try again\")"
+#- name: patch install_ansible.py so that it allows for java 11 also
+#  lineinfile:
+#    path: /tmp/dvinstall/install_ansible.py
+#    regexp: "^      sys.exit.\"Dataverse requires Java 1.8. Please install it, or make sure it's in your PATH, and try again\"."
+#    line: "      sys.exit(\"Dataverse requires Java 1.8 or 11. Please install it, or make sure it's in your PATH, and try again\")"
 
 - name: calculate detaverse install necessity
   set_fact:

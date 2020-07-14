@@ -1,7 +1,7 @@
 #metadataBlock	name	dataverseAlias	displayName	blockURI												
 	citation		Citation Metadata	https://dataverse.org/schema/citation/												
 #datasetField	name	title	description	watermark	 fieldType	displayOrder	displayFormat	advancedSearchField	allowControlledVocabulary	allowmultiples	facetable	displayoncreate	required	parent	metadatablock_id	termURI
-	title	Title	Full title by which the Dataset is known.	Enter title...	text	0		TRUE	FALSE	FALSE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/title
+	title	English Title	Full title by which the Dataset is known.	Enter title...	text	0		TRUE	FALSE	FALSE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/title
 	title_hu	Hungarian title	Hungarian version of the title	Enter title...	text	1		TRUE	FALSE	FALSE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/title
 	subtitle	Subtitle	A secondary title used to amplify or state certain limitations on the main title.		text	2		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation	
 	alternativeTitle	Alternative Title	A title by which the work is commonly referred, or an abbreviation of the title.		text	3		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation	http://purl.org/dc/terms/alternative
@@ -18,7 +18,7 @@
 	datasetContactName	Name	The contact's Family Name, Given Name or the name of the organization.	FamilyName, GivenName or Organization	text	14	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	datasetContact	citation	
 	datasetContactAffiliation	Affiliation	The organization with which the contact is affiliated.		text	15	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	datasetContact	citation	
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	16	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation	
-	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	17		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
+	dsDescription	English Description	A summary describing the purpose, nature, and scope of the Dataset.		none	17		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
 	dsDescriptionValue	Text	A summary describing the purpose, nature, and scope of the Dataset.		textbox	18	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	TRUE	dsDescription	citation	
 	dsDescriptionDate	Date	In cases where a Dataset contains more than one description (for example, one might be supplied by the data producer and another prepared by the data repository where the data are deposited), the date attribute is used to distinguish between the two descriptions. The date attribute follows the ISO convention of YYYY-MM-DD.	YYYY-MM-DD	date	19	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	dsDescription	citation	
 	dsDescription_hu	Hungarian description	The Hungarian version of the Description field.		none	17		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	

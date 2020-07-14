@@ -2,6 +2,9 @@
 
 # dataverse/tasks/dataverse-metadata.yml
 
+- name: flushing handlers to start glassfish if needed
+  meta: flush_handlers
+
 - name: Updating metadata
   debug:
     msg: '##### UPDATING METADATA #####'
@@ -15,3 +18,6 @@
 - name: Add citation.tsv to dataverse
   shell: 'curl http://localhost:8080/api/admin/datasetfield/load -H "Content-type: text/tab-separated-values" -X POST --upload-file /tmp/citation.tsv'
   notify: enable and restart glassfish
+
+- name: update Solr schema
+  script: 'updateSchemaMDB.sh -t {{ dataverse.solr.root }}/server/solr/collection1/conf'
