@@ -43,7 +43,7 @@
 
 - name: install various packages
   package:
-    name: bash-completion, git, jq, mlocate, net-tools, sudo, unzip, python3-psycopg2
+    name: bash-completion, git, jq, mlocate, net-tools, sudo, unzip, python3-psycopg2, python-boto3, python-configparser
   tags: prereqs
 
 - name: install java-nnn-openjdk and other packages for RedHat/CentOS.
