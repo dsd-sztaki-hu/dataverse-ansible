@@ -29,6 +29,10 @@
 #/opt/dv/dataverse-property-files/lang-integrator.py /opt/dv/dataverse-property-files/en-US/mime_fac > /opt/dv/MimeTypeFacets_en.properties
 /opt/dv/dataverse-property-files/lang-integrator.py /opt/dv/dataverse-property-files/en-US/roles > /opt/dv/BuiltInRoles_hu.properties
 
+/opt/dv/dataverse-property-files/lang-integrator.py /opt/dv/dataverse-property-files/mime > /opt/dv/MimeTypeDetectionByFileExtension_en.properties
+/opt/dv/dataverse-property-files/lang-integrator.py /opt/dv/dataverse-property-files/mime > /opt/dv/MimeTypeDetectionByFileExtension_hu.properties
+
+
 if [ -n "$CV_MANAGER_URL" ]; then
     # English
     #echo ""  >> /opt/dv/Bundle_en.properties
