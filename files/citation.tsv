@@ -1,5 +1,5 @@
 #metadataBlock	name	dataverseAlias	displayName	blockURI												
-	citation		Citation Metadata	https://dataverse.org/schema/citation/												
+	citation		Basic Metadata	https://dataverse.org/schema/citation/												
 #datasetField	name	title	description	watermark	 fieldType	displayOrder	displayFormat	advancedSearchField	allowControlledVocabulary	allowmultiples	facetable	displayoncreate	required	parent	metadatablock_id	termURI
 	title	English Title	Full title by which the Dataset is known.	Enter title...	text	0		TRUE	FALSE	FALSE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/title
 	title_hu	Hungarian title	Hungarian version of the title	Enter title...	text	1		TRUE	FALSE	FALSE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/title
