@@ -42,9 +42,4 @@
   service: name=solr enabled=yes state=restarted
 
 - name: reindex solr
-  uri:
-    url: "{{ item }}"
-    method: GET
-  with_items:
-   - http://localhost:8080/api/admin/index/clear
-   - http://localhost:8080/api/admin/index
+  include_tasks: "{{ role_path }}/handlers/reindex_solr.yml"

@@ -1,0 +1,16 @@
+---
+## this file is needed so we can run multiple tasks in a handler
+
+- name: wait for glassfish to become ready
+  wait_for:
+    port: 8009
+    state: present
+    timeout: "{{ dataverse.glassfish.timeout }}"
+
+#- name: do reindex solr
+#  uri:
+#    url: "{{ item }}"
+#    method: GET
+#  with_items:
+#   - http://localhost:8080/api/admin/index/clear
+#   - http://localhost:8080/api/admin/index
