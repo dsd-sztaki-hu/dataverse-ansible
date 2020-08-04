@@ -6,6 +6,49 @@
   debug:
     msg: '##### POST-INSTALL GLASSFISH CONFIGURATION #####'
 
+- set_fact:
+    upload_temp_on_storage: '{{ dataverse.filesdirs[0].path }}/uploadtemp'
+
+- name: ensure directory {{ upload_temp_on_storage }} exists
+  file:
+    path: '{{ upload_temp_on_storage }}'
+    state: directory
+    mode: '0755'
+    owner: '{{ dataverse.glassfish.user }}'
+    group: '{{ dataverse.glassfish.group }}'
+
+- name: stat {{ glassfish_dir }}/glassfish/domains/{{ dataverse.glassfish.domain }}/generated/jsp/dataverse
+  stat:
+    path: '{{ glassfish_dir }}/glassfish/domains/{{ dataverse.glassfish.domain }}/generated/jsp/dataverse'
+  register: upload_temp_dir
+
+- name: find files in generated/jsp/dataverse if directory
+  find:
+    paths: '{{ glassfish_dir }}/glassfish/domains/{{ dataverse.glassfish.domain }}/generated/jsp/dataverse/'
+    file_type: file
+  register: upload_temp_files
+  when: upload_temp_dir.stat.isdir
+
+- name: copy files from generated/jsp/dataverse to {{ upload_temp_on_storage }} if generated/jsp/dataverse is a directory
+  copy:
+    remote_src: true
+    src: '{{ item.path }}'
+    dest: '{{ upload_temp_on_storage }}/'
+  with_items: '{{ upload_temp_files.files }}'
+  when: upload_temp_dir.stat.isdir
+
+- name: remove generated/jsp/dataverse if a directory
+  file:
+    path: '{{ glassfish_dir }}/glassfish/domains/{{ dataverse.glassfish.domain }}/generated/jsp/dataverse'
+    state: absent
+  when: upload_temp_dir.stat.isdir
+
+- name: set generated/jsp/dataverse as symlink to {{ upload_temp_on_storage }}
+  file:
+    dest: '{{ glassfish_dir }}/glassfish/domains/{{ dataverse.glassfish.domain }}/generated/jsp/dataverse'
+    src: '{{ upload_temp_on_storage }}'
+    state: link
+
 # Glassfish is not running here.
 #- name: stop glassfish manually (systemd gums up the works)
 #  become: yes
