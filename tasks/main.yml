@@ -20,6 +20,7 @@
    - postinstall
    - s3
    - gui
+   - war
 
 - include: rserve.yml
   when: rserve.install == true
@@ -31,6 +32,7 @@
    - apache
    - dataverse
    - postinstall
+   - war
 
 - include: sshkeys.yml
   when: sshkeys.enabled == True
@@ -48,7 +50,9 @@
 
 - include: dataverse-branch.yml
   when: dataverse_branch != "release"
-  tags: dataverse
+  tags:
+   - dataverse
+   - war
 
 - include: jacoco-download.yml
   when: dataverse.jacoco.enabled == true and
@@ -78,7 +82,9 @@
   tags: localstack
 
 - include: dataverse-build.yml
-  tags: dataverse
+  tags:
+    - dataverse
+    - war
   when: dataverse_branch != "release"
 
 - set_fact:
@@ -87,8 +93,13 @@
 
 - include: dataverse-install.yml
   tags: dataverse
-  when: (dataverse_zip_download is defined and dataverse_zip_download.changed) or
-        (dataverse_branch != "release" and dataverse_build_war_changed)
+  when: ((dataverse_zip_download is defined and dataverse_zip_download.changed) or
+         (dataverse_branch != "release" and dataverse_build_war_changed)) and
+        'war' not in ansible_run_tags
+
+- include: dataverse-war-deploy.yml
+  tags: war
+  when: "'war' in ansible_run_tags"
 
 - include: dataverse-metadata.yml
   tags: metadata

@@ -1,0 +1,3 @@
+
+- name: deploy dataverse war only
+  command: "{{ glassfish_dir}}/bin/asadmin redeploy --name dataverse /tmp/dvinstall/dataverse.war"
