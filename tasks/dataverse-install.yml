@@ -15,7 +15,7 @@
 
 - name: grab current copies of installer source
   get_url:
-    url: 'https://raw.githubusercontent.com/IQSS/dataverse/develop/scripts/installer/{{ item }}'
+    url: 'https://raw.githubusercontent.com/dsd-sztaki-hu/dataverse/develop/scripts/installer/{{ item }}'
     dest: '/tmp/dvinstall/{{ item }}'
     mode: '0755'
   with_items:
@@ -29,7 +29,7 @@
 
 - name: grab api setup scripts as well
   get_url:
-    url: 'https://raw.githubusercontent.com/IQSS/dataverse/develop/scripts/api/{{ item }}'
+    url: 'https://raw.githubusercontent.com/dsd-sztaki-hu/dataverse/develop/scripts/api/{{ item }}'
     dest: '/tmp/dvinstall/{{ item }}'
     mode: '0755'
   with_items:
