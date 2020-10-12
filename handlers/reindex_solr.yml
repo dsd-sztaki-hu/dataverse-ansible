@@ -7,10 +7,10 @@
     state: present
     timeout: "{{ dataverse.glassfish.timeout }}"
 
-#- name: do reindex solr
-#  uri:
-#    url: "{{ item }}"
-#    method: GET
-#  with_items:
-#   - http://localhost:8080/api/admin/index/clear
-#   - http://localhost:8080/api/admin/index
+- name: do reindex solr
+  uri:
+    url: "{{ item }}"
+    method: GET
+  with_items:
+   - http://localhost:8080/api/admin/index/clear
+   - http://localhost:8080/api/admin/index

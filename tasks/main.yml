@@ -164,6 +164,15 @@
   when: prometheus.install == true
   tags: prometheus
 
+#notify reindex solr throws error here
+- name: Reindex solr
+  uri:
+    url: "{{ item }}"
+    method: GET
+  with_items:
+   - http://localhost:8080/api/admin/index/clear
+   - http://localhost:8080/api/admin/index
+
 - name: Fin
   debug:
     msg: '##### END ANSIBLE ROLE #####'
