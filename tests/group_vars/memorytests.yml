@@ -77,7 +77,7 @@ dataverse:
     output_format: json
     platform: dash
     robots_url: "https://raw.githubusercontent.com/CDLUC3/Make-Data-Count/master/user-agents/lists/robot.txt"
-    version: "0.1"
+    version: "0.1.04"
     upload_to_hub: False
     user: counter
     year_month: "2018-05"
@@ -194,7 +194,7 @@ dataverse:
     enabled: false
     argument: '-DcompilerArgument=-Xlint:unchecked test -P all-unit-tests'
   usermgmtkey: burrito
-  version: '5.10'
+  version: '5.10.1'
 
 build_guides: false
 
