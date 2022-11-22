@@ -95,6 +95,11 @@
   tags:
   - postinstall
 
+- include: dataverse-arp-extensions.yml
+  when: describo.enabled
+  tags: 
+  - arp
+
 - include: dataverse-gui.yml
   tags:
   - gui

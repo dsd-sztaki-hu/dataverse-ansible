@@ -1,0 +1,71 @@
+
+- name: define describo-related settings
+  set_fact:
+    arp_settings:
+     - name: arp.script.path
+       value: /var/www/arp-kiserletek/cedarTemplateConverter/cedarTemplateConverter.py
+     - name: arp.python.path
+       value: /usr/bin/python3
+     - name: dv.api.key
+       value: "{{ api_token }}"
+     - name: dv.host
+       value: https://{{ site_fqdn }}
+     - name: dv.updater.script.path
+       value: /tmp/dataverse/conf/solr/8.11.1/update-fields.sh
+     - name: solr.host
+       value: http://localhost:8983
+     - name: solr.schema.path
+       value: /usr/local/solr/server/solr/collection1/conf/schema.xml
+     - name: describo.host
+       value: "{{ describo.host }}"
+     - name: solr.collection.name
+       value: collection1
+     - name: describo.secret
+       value: "{{ describo.secret }}"
+
+- set_fact:
+    arp_settings: '{{ arp_settings | rekey_on_member("name") }}'
+
+
+#- debug:
+#    var: arp_settings
+#
+#- debug:
+#    var: arp_settings[item].value
+##    var: "{{ arp_settings[item.item] }}"
+#  with_items: "{{ arp_settings }}"
+
+
+- name: get describo-related settings
+  shell: "{{ payara_dir }}/bin/asadmin list-jvm-options | grep {{ item }}= | sed 's/.*=//'"
+  register: current_arp_settings
+  changed_when: false
+  with_items: "{{ arp_settings }}"
+
+#- debug:
+#    var: item.stdout
+#  with_items: "{{ current_arp_settings.results }}"
+
+- name: calculate changed_arp_settings
+  set_fact:
+    changed_arp_settings: "{{ (arp_settings[item.item].value == item.stdout) |
+                              ternary(changed_arp_settings,
+                                      changed_arp_settings + [ {'name': item.item, 'value': item.stdout } ] )
+                           }}"
+  with_items: "{{ current_arp_settings.results }}"
+  vars:
+    changed_arp_settings: []
+
+#- debug:
+#    var: changed_arp_settings
+
+- name: delete changed describo-related settings
+  command: "{{ payara_dir }}/bin/asadmin delete-jvm-options \"-D{{ item.name }}={{ item.value | replace(':','\\:') }}\"" 
+  with_items: "{{ changed_arp_settings }}"
+
+#- debug:
+#    var: changed_arp_settings
+
+- name: configure describo-related settings
+  command: "{{ payara_dir }}/bin/asadmin create-jvm-options \"-D{{ item.name }}={{ arp_settings[item.name].value | replace(':','\\:') }}\"" 
+  with_items: "{{ changed_arp_settings }}"
