@@ -11,7 +11,7 @@
      - name: dv.host
        value: https://{{ site_fqdn }}
      - name: dv.updater.script.path
-       value: /tmp/dataverse/conf/solr/8.11.1/update-fields.sh
+       value: "{{ dataverse.srcdir }}/conf/solr/8.11.1/update-fields.sh"
      - name: solr.host
        value: http://localhost:8983
      - name: solr.schema.path
