@@ -26,6 +26,15 @@
 - set_fact:
     arp_settings: '{{ arp_settings | rekey_on_member("name") }}'
 
+- name: set solr.schema.path group writable
+  file:
+    path: "{{ arp_settings['solr.schema.path'].value }}"
+    mode: 0664
+- name: add payara user to solr group to allow editing of solr.schema.path
+  user:
+    name: "{{ dataverse.payara.user }}"
+    groups: "{{ dataverse.solr.group }}"
+    append: true
 
 #- debug:
 #    var: arp_settings
