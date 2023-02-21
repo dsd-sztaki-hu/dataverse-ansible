@@ -191,7 +191,7 @@ dataverse:
     enabled: true
     argument: '-DcompilerArgument=-Xlint:unchecked test -P all-unit-tests'
   usermgmtkey: burrito
-  version: '5.12.1'
+  version: '5.13'
 
 build_guides: false
 
@@ -239,7 +239,7 @@ localstack:
   web_ui: 8888
 
 maven:
-  version: 3.8.6
+  version: 3.8.7
 
 munin:
   install: false
@@ -301,6 +301,13 @@ sshkeys:
   files:
   urls:
   user:
+
+
+harvest:
+  oaiserver:
+    maxidentifiers: 2
+    maxrecords: 2
+
 
 # un-nesting the below so's we can pass them at the CLI
 
