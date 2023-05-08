@@ -78,3 +78,11 @@
 - name: configure describo-related settings
   command: "{{ payara_dir }}/bin/asadmin create-jvm-options \"-D{{ item.name }}={{ arp_settings[item.name].value | replace(':','\\:') }}\"" 
   with_items: "{{ changed_arp_settings }}"
+
+- name: set cedar key
+  uri:
+    url: http://localhost:8080/api/admin/arp/setCedarKey
+    method: POST
+    body: '{"userIdentifier": "dataverseAdmin", "cedarKey": "{{ cedar.key }}"}'
+    body_format: json
+    status_code: 200
