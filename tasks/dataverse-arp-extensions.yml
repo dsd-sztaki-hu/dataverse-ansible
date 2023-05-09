@@ -86,3 +86,24 @@
     body: '{"userIdentifier": "dataverseAdmin", "cedarKey": "{{ cedar.key }}"}'
     body_format: json
     status_code: 200
+
+- name: set cedar services base domain
+  uri:
+    method: PUT
+    url: http://localhost:8080/api/admin/settings/arp.cedar.domain
+    body: "http://localhost:{{ cedar.domain }}"
+    status_code: 200
+
+- name: set aroma address
+  uri:
+    method: PUT
+    url: http://localhost:8080/api/admin/settings/arp.aroma.address
+    body: "{{ describo.host }}"
+    status_code: 200
+
+- name: set solr updater address
+  uri:
+    method: PUT
+    url: http://localhost:8080/api/admin/settings/arp.solr.updater.address
+    body: "http://localhost:{{ solr_updater.port }}"
+    status_code: 200
