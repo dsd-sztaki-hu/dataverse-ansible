@@ -71,9 +71,9 @@ dataverse:
   language:
     enabled: false # setting this to true allows the language task to run
     languages:
-     - locale: en
+     - locale: en_US
        title: English
-     - locale: de-DE
+     - locale: de_DE
        title: Deutsch
     language_packs:
       source: https://github.com/GlobalDataverseCommunityConsortium/dataverse-language-packs.git
@@ -187,6 +187,16 @@ dataverse:
       path: /usr/local/dvn/data
 #   - label: label
 #     path: /path/to/filestore   ## this is a sample entry for further file stores
+  frontend:
+    branch: develop
+    enabled: false
+    docroot:
+      base: /var/www/html
+      dir: spa
+    nodejs:
+      version: 18
+    repo: "http://github.com/IQSS/dataverse-frontend"
+    srcdir: /tmp/dataverse-frontend
   payara:
     user: dataverse
     group: dataverse
@@ -302,7 +312,7 @@ localstack:
   web_ui: 8888
 
 maven:
-  version: 3.8.7
+  version: 3.8.8
 
 munin:
   install: false

@@ -124,6 +124,16 @@ dataverse:
       path: /usr/local/dvn/data
 #   - label: label
 #     path: /path/to/filestore   ## this is a sample entry for further file stores
+  frontend:
+    branch: develop
+    enabled: true
+    docroot:
+      base: /var/www/html
+      dir: spa
+    nodejs:
+      version: 18
+    repo: "http://github.com/IQSS/dataverse-frontend"
+    srcdir: /tmp/dataverse-frontend
   payara:
     user: dataverse
     group: dataverse
@@ -147,9 +157,9 @@ dataverse:
   language:
     enabled: false # setting this to true allows the language task to run
     languages:
-     - locale: en
+     - locale: en_US
        title: English
-     - locale: de-DE
+     - locale: de_DE
        title: Deutsch
     language_packs:
       source: https://github.com/GlobalDataverseCommunityConsortium/dataverse-language-packs.git
@@ -257,6 +267,14 @@ db:
     log_statements: none
     version: 13
     port: 5432
+    replication:
+      enabled: false
+      # all servers must be defined so firewalls may be opened accordingly
+      servers: 
+        - 192.168.0.1
+        - 192.168.0.2
+      user: rep
+#      pass: WRITE SOME GOOD PASSWORD
   backups:
     enabled: false
     rootdir: /opt/pg_backups
@@ -288,7 +306,7 @@ localstack:
   web_ui: 8888
 
 maven:
-  version: 3.8.7
+  version: 3.8.8
 
 munin:
   install: false
