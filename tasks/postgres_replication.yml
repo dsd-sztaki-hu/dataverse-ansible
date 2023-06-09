@@ -28,7 +28,7 @@
      line: 'wal_keep_segments = 100		# in logfile segments; 0 disables'
   when:
    - db.use_rds == false
-   - db.postgres.version < '13'
+   - db.postgres.version < 13
   notify: enable and restart postgres
 
 - name: allow in firewall for specific servers to access postgres
