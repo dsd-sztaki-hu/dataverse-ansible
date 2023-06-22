@@ -43,7 +43,8 @@
   when: shibboleth.showListFirst is defined
 
 - name: overwrite robots.txt in dataverse installation using the file defined by dataverse.robots_txt_url
-  uri:
+  get_url:
     url: '{{ dataverse.robots_txt_url }}'
     dest: '{{ payara_dir }}/glassfish/domains/{{ dataverse.payara.domain }}/applications/dataverse/robots.txt'
+    force: true
   when: dataverse.robots_txt_url is defined
