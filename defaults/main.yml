@@ -298,6 +298,7 @@ grafana:
 
 java:
   version: 11
+  home: /usr/lib/jvm/java-{{ java.version}}
 
 localstack:
   enabled: false
