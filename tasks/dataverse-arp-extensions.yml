@@ -89,23 +89,23 @@
     body_format: json
     status_code: 200
 
-- name: set cedar services base domain
-  uri:
-    method: PUT
-    url: http://localhost:8080/api/admin/settings/arp.cedar.domain
-    body: "http://localhost:{{ cedar.domain }}"
-    status_code: 200
+- name: settings set by dataverse api
+  set_fact:
+    arp_api_settings:
+     - name: arp.cedar.domain
+       value: http://localhost:{{ cedar.domain }}
+     - name: arp.aroma.address
+       value: https://{{ describo.host }}
+     - name: arp.solr.updater.address
+       value: http://localhost:{{ solr_updater.port }}
+     - name: arp.rocrate.previewgenerator.address
+       value: http://localhost:8985
 
-- name: set aroma address
-  uri:
-    method: PUT
-    url: http://localhost:8080/api/admin/settings/arp.aroma.address
-    body: "https://{{ describo.host }}"
-    status_code: 200
 
-- name: set solr updater address
+- name: set settings by dataverse api
   uri:
     method: PUT
-    url: http://localhost:8080/api/admin/settings/arp.solr.updater.address
-    body: "http://localhost:{{ solr_updater.port }}"
+    url: http://localhost:8080/api/admin/settings/{{ item.name }}
+    body: "{{ item.value }}"
     status_code: 200
+  with_items: "{{ arp_api_settings }}"
