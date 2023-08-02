@@ -22,6 +22,8 @@
        value: collection1
      - name: describo.secret
        value: "{{ describo.secret }}"
+     - name: arp.rocrate.previewgenerator.address
+       value: http://localhost:8985
 
 - set_fact:
     arp_settings: '{{ arp_settings | rekey_on_member("name") }}'
