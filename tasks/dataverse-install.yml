@@ -162,6 +162,7 @@
   service:
     name: payara
     state: started
+  register: payara_start
 
 - name: wait for payara to become ready
   wait_for:
@@ -172,6 +173,7 @@
 - name: really wait for Payara to become ready
   ansible.builtin.pause:
     seconds: 90
+  when: payara_start.changed
 
 # install.py doesn't currently log this output, nothing sensitive in install.out
 #- name: negate need for password aliases
