@@ -261,6 +261,7 @@ dataverse:
   deployment:
     upgrade_only: false
 #  robots_txt_url: https://guides.dataverse.org/en/latest/_downloads/3a5cd7a283eecd5e93289e30af713554/robots.txt
+  version: '5.14'
 
 build_guides: false
 
@@ -430,11 +431,14 @@ shibboleth:
   SSO: "<SSO>SAML2 SAML1</SSO>"
   MetadataProvider: '<MetadataProvider type="XML" file="dataverse-idp-metadata.xml" backingFilePath="local-idp-metadata.xml" legacyOrgNames="true" reloadInterval="7200"/>'
   showListFirst: 'true'
+<<<<<<< HEAD
 
 orcid:
   enabled: false
   clientId: SETME
   clientSecret: SETME
+=======
+>>>>>>> gdcc/develop
 
 orcid:
   enabled: false
