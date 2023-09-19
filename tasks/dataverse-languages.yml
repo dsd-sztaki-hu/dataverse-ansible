@@ -19,6 +19,12 @@
     owner: '{{ dataverse.payara.user }}'
   when: (dataverse_lang_directory.stdout | trim) == ''
 
+- name: clone dataverse language packs
+  git:
+    repo: "{{ dataverse.language.language_packs.source }}"
+    dest: "{{ lang_git_dir }}"
+    version: "{{ dataverse.language.language_packs.version }}"
+
 - name: copy default bundle to the language directory if it was just created
   copy:
     src: "{{ lang_git_dir }}/en_US/Bundle.properties"
@@ -34,13 +40,6 @@
 - name: restart payara after setting language directory
   service: name=payara state=restarted
   when: (dataverse_lang_directory.stdout | trim) == ''
-
-- name: clone dataverse language packs
-  git:
-    repo: "{{ dataverse.language.language_packs.source }}"
-    dest: "{{ lang_git_dir }}"
-    version: "{{ dataverse.language.language_packs.version }}"
-  run_once: true
 
 - name: prepare language file temporary directory
   shell: cd {{ lang_git_dir }} ; rm -rf tmp.bak ; [ -d tmp ] && mv tmp tmp.bak && rm tmp.bak/*.zip ; mkdir tmp
