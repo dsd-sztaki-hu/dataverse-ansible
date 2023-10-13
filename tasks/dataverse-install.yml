@@ -137,26 +137,38 @@
     python_bin: '/usr/bin/python3'
   when: ansible_os_family == "Debian"
 
+- name: check if dataverse is deployed in payara
+  shell: "/usr/local/payara5//bin/asadmin list-applications | grep -q '^dataverse'"
+  register: dataverse_is_deployed
+  ignore_errors: True
+  when:
+   - dataverse.deployment.upgrade_only is defined
+   - dataverse.deployment.upgrade_only
+
+- name: upgrade only -- deploy dataverse war
+  shell: '{{ payara_dir }}/bin/asadmin redeploy --name dataverse /tmp/dvinstall/dataverse.war'
+  become: yes
+  become_user: '{{ dataverse.payara.user }}'
+  when:
+   - dataverse.deployment.upgrade_only is defined
+   - dataverse.deployment.upgrade_only
+   - dataverse_is_deployed is succeeded
+
 - name: fire off installer
   shell: '{{ python_bin }} /tmp/dvinstall/install.py -f --config_file=default.config --noninteractive > /tmp/dvinstall/install.out 2>&1'
   become: yes
   become_user: '{{ dataverse.payara.user }}'
   args:
     chdir: /tmp/dvinstall
-  when: not dataverse.deployment.upgrade_only
-
-- name: upgrade only -- deploy dataverse war
-  shell: '{{ payara_dir }}/bin/asadmin redeploy --name dataverse /tmp/dvinstall/dataverse.war'
-  become: yes
-  become_user: '{{ dataverse.payara.user }}'
-  when: dataverse.deployment.upgrade_only
+  register: dataverse_installer_was_run
+  when: dataverse.deployment.upgrade_only is not defined or not dataverse.deployment.upgrade_only
 
 - name: stop payara manually (systemd gums up the works)
   become: yes
   become_user: "{{ dataverse.payara.user }}"
   shell: '{{ payara_dir }}/bin/asadmin stop-domain {{ dataverse.payara.domain }}'
   ignore_errors: yes
-  when: not dataverse.deployment.upgrade_only
+  when: dataverse.deployment.upgrade_only is not defined or not dataverse.deployment.upgrade_only
 
 - name: now start payara with systemd
   service:
