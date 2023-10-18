@@ -52,10 +52,12 @@
   notify: enable and restart payara
 
 - name: check if there was a change in the temporary directory
-  shell: cd {{ lang_git_dir }} ; diff -r tmp tmp.bak
+#  shell: cd {{ lang_git_dir }} ; diff -r tmp tmp.bak
+#  shell: cd {{ lang_git_dir }} ; diff -r tmp {{ dataverse.language.lang_directory }}
+  shell: rsync -rn {{ lang_git_dir }}/tmp/ {{ dataverse.language.lang_directory }}/
   register: diff
-  changed_when: diff.rc != 0
-  failed_when: diff.rc > 2
+  changed_when: (diff.stdout | trim) == ''
+  failed_when: diff.rc > 0
   notify: enable and restart payara
 
 - name: create language pack
