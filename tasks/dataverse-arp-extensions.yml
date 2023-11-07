@@ -91,7 +91,7 @@
 
 - name: settings set by dataverse api
   set_fact:
-    arp_api_settings:
+    arp_api_calculated_settings:
      - name: arp.cedar.domain
        value: http://localhost:{{ cedar.domain }}
      - name: arp.aroma.address
@@ -108,4 +108,4 @@
     url: http://localhost:8080/api/admin/settings/{{ item.name }}
     body: "{{ item.value }}"
     status_code: 200
-  with_items: "{{ arp_api_settings }}"
+  with_items: "{{ arp_api_settings + arp_api_calculated_settings }}"
