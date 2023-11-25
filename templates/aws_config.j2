@@ -1,2 +1,6 @@
 [default]
 region = {{ s3.region }}
+[profile {{ s3.storage_driver_id }}]
+{% if s3.custom_endpoint_url is defined %}
+endpoint_url = {{ s3.custom_endpoint_url }}
+{% endif %}

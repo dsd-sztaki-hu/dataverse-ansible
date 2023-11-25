@@ -10,7 +10,7 @@ then
 	echo "\-D$OPTION=$VALUE" already specified, nothing to do
 else
 	CURRENT=`{{ payara_dir}}/bin/asadmin list-jvm-options | grep "^-D$OPTION=" | sed 's/:/\\:/g'`
-#	echo "$CURRENT"
+	#echo "$CURRENT"
 	[ "$CURRENT" ] && {{ payara_dir}}/bin/asadmin delete-jvm-options "$CURRENT"
 	{{ payara_dir}}/bin/asadmin create-jvm-options "-D$OPTION=$ESCVALUE"
 fi
