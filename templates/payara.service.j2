@@ -5,7 +5,7 @@ After = syslog.target network.target
 [Service]
 Type = forking
 User={{ dataverse.payara.user }}
-ExecStart = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar start-domain
+ExecStart = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar start-domain --debug {{ dataverse.payara.debug is defined and dataverse.payara.debug }}
 ExecStop = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar stop-domain
 ExecReload = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar restart-domain
 LimitNOFILE=65000
