@@ -23,7 +23,7 @@
     cert_alias: '{{ item.0 }}'
     keystore_pass: '{{ item.1.pass }}'
     state: present
-  when: certfiles.changed
+#  when: certfiles.changed
   loop: "{{ extra_certificates.files | product(extra_certificates.java_keystores) | list }}"
   notify: enable and restart payara
 

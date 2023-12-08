@@ -38,37 +38,49 @@
     group: '{{ dataverse.payara.group }}'
     mode: '0600'
 
-- name: set storage-driver-id to {{ s3.storage_driver_id }}
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.storage-driver-id" "{{ s3.storage_driver_id }}"'
+- name: set storage-driver-id to {{ s3[0].storage_driver_id }}
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.storage-driver-id" "{{ s3[0].storage_driver_id }}"'
 
-- name: set s3 type to s3
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.type" "{{ s3.files_type }}"'
+- name: set storage type to s3
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.type" "{{ item.files_type }}"'
+  with_items: '{{ s3 }}'
 
-- name: set s3 label to s3
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.label" "{{ s3.label }}"'
+- name: set profile name
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.profile" "{{ item.storage_driver_id }}"'
+  with_items: '{{ s3 }}'
+
+- name: set storage label
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.label" "{{ item.label }}"'
+  with_items: '{{ s3 }}'
 
 - name: set s3 bucket name
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.bucket-name" "{{ s3.bucket_name }}"'
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.bucket-name" "{{ item.bucket_name }}"'
+  with_items: '{{ s3 }}'
 
 - name: set s3 url expiration minutes
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.url-expiration-minutes" "{{ s3.url_expiration_minutes }}"'
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.url-expiration-minutes" "{{ item.url_expiration_minutes }}"'
+  with_items: '{{ s3 }}'
 
 # optional s3 settings
 
 - name: expose custom_endpoint_url as variable
   set_fact:
-    custom_endpoint_url: '{{ s3.custom_endpoint_url }}'
+    custom_endpoint_urls: '{{ custom_endpoint_urls }} + [ {{ item.custom_endpoint_url }} ]'
+  with_items: '{{ s3 }}'
+  vars:
+    custom_endpoint_urls: []
 
 - name: create S3 bucket
   shell:
-    'aws s3api create-bucket --bucket {{ s3.bucket_name }}'
+    'aws s3api create-bucket --bucket {{ item.bucket_name }}'
   args:
     executable: /bin/bash
   become_user: '{{ dataverse.payara.user }}'
   environment:
     PATH: "{{ lookup('env', 'PATH') }}:/usr/local/bin"
-  when: s3.create_bucket == true
-    and custom_endpoint_url | length == 0
+  when: item.create_bucket == true
+    and custom_endpoint_urls | length == 0
+  with_items: '{{ s3 }}'
 
 - name: "place s3_cors.json template"
   template:
@@ -77,45 +89,53 @@
     owner: '{{ dataverse.payara.user }}'
     group: '{{ dataverse.payara.group }}'
     mode: 0644
-  when: (s3.download_redirect == true or s3.upload_redirect == true)
-    and s3.cors_already_set == false
+  when: (item.download_redirect == true or item.upload_redirect == true)
+    and item.cors_already_set == false
+  with_items: '{{ s3 }}'
 
 - name: enable CORS on S3 bucket
   shell:
-    'aws s3api put-bucket-cors --bucket {{ s3.bucket_name }} --cors-configuration file://~{{ dataverse.payara.user }}/s3_cors.json'
+    'aws s3api put-bucket-cors --bucket {{ item.bucket_name }} --cors-configuration file://~{{ dataverse.payara.user }}/item_cors.json'
   args:
     executable: /bin/bash
   become: yes
   become_user: '{{ dataverse.payara.user }}'
   environment:
     PATH: "{{ lookup('env', 'PATH') }}:/usr/local/bin"
-  when: (s3.download_redirect == true or s3.upload_redirect == true)
+  when: (item.download_redirect == true or item.upload_redirect == true)
     and custom_endpoint_url | length == 0
-    and s3.cors_already_set == false
+    and item.cors_already_set == false
+  with_items: '{{ s3 }}'
 
 - ansible.builtin.import_tasks: s3_custom_endpoint_url.yml
-  when: custom_endpoint_url | length > 0
+  when: custom_endpoint_urls | length > 0
 
 - name: set s3 direct download
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.download-redirect" "{{ s3.download_redirect }}"'
-  when: s3.download_redirect == true
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.download-redirect" "{{ item.download_redirect }}"'
+  when: item.download_redirect == true
+  with_items: '{{ s3 }}'
 
 - name: set s3 direct upload
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.upload-redirect" "{{ s3.upload_redirect }}"'
-  when: s3.upload_redirect == true
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.upload-redirect" "{{ item.upload_redirect }}"'
+  when: item.upload_redirect == true
+  with_items: '{{ s3 }}'
 
 - name: set s3 path style access
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.path-style-access" "{{ s3.path_style_access }}"'
-  when: s3.path_style_access == true
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.path-style-access" "{{ item.path_style_access }}"'
+  when: item.path_style_access == true
+  with_items: '{{ s3 }}'
 
 - name: set s3 payload signing
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.payload-signing" "{{ s3.payload_signing }}"'
-  when: s3.payload_signing == true
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.payload-signing" "{{ item.payload_signing }}"'
+  when: item.payload_signing == true
+  with_items: '{{ s3 }}'
 
 - name: turn chunked encoding off
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.chunked-encoding" "{{ s3.chunked_encoding }}"'
-  when: s3.chunked_encoding == false
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.chunked-encoding" "{{ item.chunked_encoding }}"'
+  when: item.chunked_encoding == false
+  with_items: '{{ s3 }}'
 
 - name: set custom endpoint region
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.custom-endpoint-region" "{{ s3.custom_endpoint_region }}"'
-  when: s3.custom_endpoint_region is defined and s3.custom_endpoint_region != ''
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.custom-endpoint-region" "{{ item.custom_endpoint_region }}"'
+  when: item.custom_endpoint_region is defined and item.custom_endpoint_region != ''
+  with_items: '{{ s3 }}'

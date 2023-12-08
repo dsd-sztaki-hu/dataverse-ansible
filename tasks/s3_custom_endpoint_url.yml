@@ -4,25 +4,28 @@
 #  set_fact: "custom_endpoint_escaped={{ s3.custom_endpoint_url | regex_replace (':','\\:') }}"
 
 - name: set s3 custom endpoint url
-  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ s3.storage_driver_id }}.custom-endpoint-url" "{{ s3.custom_endpoint_url }}"'
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.custom-endpoint-url" "{{ item.custom_endpoint_url }}"'
+  with_items: '{{ s3 }}'
 
-- name: create S3 bucket
+- name: create S3 bucket(s)
   shell:
-    cmd: 'aws s3api create-bucket --bucket {{ s3.bucket_name }} --endpoint-url {{ s3.custom_endpoint_url }} --profile {{ s3.storage_driver_id }}'
+    cmd: 'aws s3api create-bucket --bucket {{ item.bucket_name }} --endpoint-url {{ item.custom_endpoint_url }} --profile {{ item.storage_driver_id }}'
     executable: /bin/bash
   become: true
   become_user: '{{ dataverse.payara.user }}'
   environment:
     PATH: "{{ lookup('env', 'PATH') }}:/usr/local/bin"
-  when: s3.create_bucket == true
+  when: item.create_bucket == true
+  with_items: '{{ s3 }}'
 
 - name: enable CORS on S3 bucket
   shell:
-    'aws s3api put-bucket-cors --bucket {{ s3.bucket_name }} --cors-configuration file://~{{ dataverse.payara.user }}/s3_cors.json --endpoint-url {{ s3.custom_endpoint_url }}'
+    'aws s3api put-bucket-cors --bucket {{ item.bucket_name }} --cors-configuration file://~{{ dataverse.payara.user }}/item_cors.json --endpoint-url {{ item.custom_endpoint_url }}'
   args:
     executable: /bin/bash
   become: yes
   become_user: '{{ dataverse.payara.user }}'
   environment:
-  when: s3.download_redirect == true or
-    s3.upload_redirect == true
+  when: item.download_redirect == true or
+    item.upload_redirect == true
+  with_items: '{{ s3 }}'
