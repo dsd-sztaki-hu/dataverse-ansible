@@ -10,6 +10,14 @@
   debug:
     msg: '##### DATAVERSE INSTALLER #####'
 
+# this is necessary for the installer. dataverse-storage.yml does the real work later.
+- name: filesdir must pre-exist
+  ansible.builtin.file:
+    path: '{{ dataverse.filesdirs[0].path }}'
+    state: directory
+    owner: '{{ dataverse.payara.user }}'
+    group: '{{ dataverse.payara.group }}'
+
 - ansible.builtin.import_tasks: dataverse-build.yml
   when: dataverse_branch != "release"
   
@@ -163,6 +171,12 @@
   register: dataverse_installer_was_run
   when: dataverse.deployment.upgrade_only is not defined or not dataverse.deployment.upgrade_only
 
+- name: upgrade only -- deploy dataverse war
+  shell: '{{ payara_dir }}/bin/asadmin redeploy --name dataverse /tmp/dvinstall/dataverse.war'
+  become: yes
+  become_user: '{{ dataverse.payara.user }}'
+  when: dataverse.deployment.upgrade_only is defined and dataverse.deployment.upgrade_only
+
 - name: stop payara manually (systemd gums up the works)
   become: yes
   become_user: "{{ dataverse.payara.user }}"
@@ -184,7 +198,7 @@
 
 - name: really wait for Payara to become ready
   ansible.builtin.pause:
-    seconds: 90
+    seconds: 120
   when: payara_start.changed
 
 # install.py doesn't currently log this output, nothing sensitive in install.out

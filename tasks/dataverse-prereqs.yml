@@ -86,11 +86,8 @@
   when:
     - ansible_os_family == "Debian"
 
-- name: create payara service group
-  group: name={{ dataverse.payara.group }} state=present
-
-- name: create payara service account
-  user: name={{ dataverse.payara.user }} group={{ dataverse.payara.group }}
+- name: Payara service account must exist
+  import_tasks: payara_service_account.yml
 
 - name: create dataverse misc files directory for language and handle and other similar auxilliary files
   file:
