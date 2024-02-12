@@ -95,7 +95,7 @@
      - name: arp.cedar.domain
        value: http://localhost:{{ cedar.domain }}
      - name: arp.aroma.address
-       value: https://{{ describo.host }}
+       value: https://{{ site_fqdn }}/aroma/
      - name: arp.solr.updater.address
        value: http://localhost:{{ solr_updater.port }}
      - name: arp.rocrate.previewgenerator.address
