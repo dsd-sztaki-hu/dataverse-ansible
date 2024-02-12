@@ -33,7 +33,7 @@
   fail:
     msg: "Storage type for default must be 'file' if dataverse.filesdirs is not empty."
   when:
-   - s3[0].enabled == false
+   - s3 is not defined or 0 not in s3  or s3[0].enabled == false
    - default_dataverse_filestores_type.skipped is not defined
    - default_dataverse_filestores_type.stdout != ''
    - default_dataverse_filestores_type.stdout != 'file'
@@ -45,7 +45,7 @@
 - name: set default storage-driver-id if not set or changed
   command: "{{ payara_dir }}/bin/asadmin create-jvm-options \"-Ddataverse.files.storage-driver-id={{ dataverse.default.storage_id }}\""
   when:
-   - s3[0].enabled == false
+   - s3 is not defined or 0 not in s3 or s3[0].enabled == false
    - default_storage_driver_id != dataverse_filestores_storage_driver_id.stdout
 
 
