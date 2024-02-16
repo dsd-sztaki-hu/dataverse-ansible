@@ -127,3 +127,41 @@
   shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.custom-endpoint-region" "{{ item.custom_endpoint_region }}"'
   when: item.custom_endpoint_region is defined and item.custom_endpoint_region != ''
   with_items: '{{ s3 }}'
+
+- name: install s3fs
+  package:
+    name: s3fs
+  when: s3[0].mapped_directory is defined and s3[0].mapped_directory != ''
+
+- name: create directory for mapping with fuse if configured
+  file:
+    path: "{{ item.mapped_directory }}"
+    state: directory
+    owner: '{{ dataverse.payara.user }}'
+    group: '{{ dataverse.payara.group }}'
+  when: item.mapped_directory is defined and item.mapped_directory != ''
+  with_items: '{{ s3 }}'
+
+#- name: create s3fs credentials file
+#  lineinfile:
+#    path: /root/.passwd-s3fs
+#    regex: '{{ item.access_key }}'
+#    line: '{{ item.access_key }}:{{ item.secret_access_key }}'
+#    create: true
+#    mode: 0600
+#  when: item.mapped_directory is defined and item.mapped_directory != ''
+#  with_items: '{{ s3 }}'
+
+- name: mount mapped directory with fuse if configured
+  shell: 's3fs {{ item.bucket_name }} {{ item.mapped_directory }} -o url={{ item.custom_endpoint_url }} -o use_path_request_style,profile={{ item.storage_driver_id }}' #,uid=<usr>,gid=<grp>,allow_other
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: '{{ dataverse.payara.user }}'
+  when: item.mapped_directory is defined and item.mapped_directory != ''
+  with_items: '{{ s3 }}'
+
+- name: set s3 storage mapping if configured
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.{{ item.storage_driver_id }}.directory" "{{ item.mapped_directory }}"'
+  when: item.mapped_directory is defined and item.mapped_directory != ''
+  with_items: '{{ s3 }}'

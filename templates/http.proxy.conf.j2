@@ -89,6 +89,9 @@ Listen {{ apache.ssl.port }} https
   ProxyPassMatch ^/503.html$ !
 
   # allow munin
+  ProxyPassMatch ^/aroma !
+
+  # allow munin
   ProxyPassMatch ^/munin !
 
   # allow guides
