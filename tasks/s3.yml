@@ -133,14 +133,14 @@
     name: s3fs
   when: s3[0].mapped_directory is defined and s3[0].mapped_directory != ''
 
-- name: create directory for mapping with fuse if configured
-  file:
-    path: "{{ item.mapped_directory }}"
-    state: directory
-    owner: '{{ dataverse.payara.user }}'
-    group: '{{ dataverse.payara.group }}'
-  when: item.mapped_directory is defined and item.mapped_directory != ''
-  with_items: '{{ s3 }}'
+#- name: create directory for mapping with fuse if configured
+#  file:
+#    path: "{{ item.mapped_directory }}"
+#    state: directory
+#    owner: '{{ dataverse.payara.user }}'
+#    group: '{{ dataverse.payara.group }}'
+#  when: item.mapped_directory is defined and item.mapped_directory != ''
+#  with_items: '{{ s3 }}'
 
 #- name: create s3fs credentials file
 #  lineinfile:
@@ -152,12 +152,37 @@
 #  when: item.mapped_directory is defined and item.mapped_directory != ''
 #  with_items: '{{ s3 }}'
 
-- name: mount mapped directory with fuse if configured
-  shell: 's3fs {{ item.bucket_name }} {{ item.mapped_directory }} -o url={{ item.custom_endpoint_url }} -o use_path_request_style,profile={{ item.storage_driver_id }}' #,uid=<usr>,gid=<grp>,allow_other
-  args:
-    executable: /bin/bash
-  become: yes
-  become_user: '{{ dataverse.payara.user }}'
+#- name: mount mapped directory with fuse if configured
+#  shell: 's3fs {{ item.bucket_name }} {{ item.mapped_directory }} -o url={{ item.custom_endpoint_url }} -o use_path_request_style,profile={{ item.storage_driver_id }}' #,uid=<usr>,gid=<grp>,allow_other
+#  args:
+#    executable: /bin/bash
+#  become: yes
+#  become_user: '{{ dataverse.payara.user }}'
+#  when: item.mapped_directory is defined and item.mapped_directory != ''
+#  with_items: '{{ s3 }}'
+
+#- name: create fstab entries
+#  lineinfile:
+#    path: /etc/fstab
+#    regex: '^s3fs.{{ item.bucket_name }}'
+#    line: "s3fs#{{ item.bucket_name }} {{ item.mapped_directory }} fuse _netdev,allow_other,umask=227,uid=1002,gid=1002,use_path_request_style,profile={{ item.storage_driver_id }},url={{ item.custom_endpoint_url }}"
+#  when: item.mapped_directory is defined and item.mapped_directory != ''
+#  with_items: '{{ s3 }}'
+
+- name: get dataverse user uid
+  getent:
+    database: passwd
+    key: '{{ dataverse.payara.user }}'
+- ansible.builtin.debug:
+    var: ansible_facts.getent_passwd['dataverse']
+
+- name: create fstab entries
+  mount:
+    src: "s3fs#{{ item.bucket_name }}"
+    path: "{{ item.mapped_directory }}"
+    fstype: fuse
+    opts: "_netdev,allow_other,umask=227,uid={{ ansible_facts.getent_passwd['dataverse'][1] }},gid={{ ansible_facts.getent_passwd['dataverse'][2] }},use_path_request_style,profile={{ item.storage_driver_id }},url={{ item.custom_endpoint_url }}"
+    state: mounted
   when: item.mapped_directory is defined and item.mapped_directory != ''
   with_items: '{{ s3 }}'
 
