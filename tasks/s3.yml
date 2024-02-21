@@ -58,6 +58,11 @@
   vars:
     custom_endpoint_urls: []
 
+- name: install awscli
+  package:
+    name: awscli
+  when: s3[0].create_bucket == true
+
 - name: create S3 bucket
   shell:
     'aws s3api create-bucket --bucket {{ item.bucket_name }}'
