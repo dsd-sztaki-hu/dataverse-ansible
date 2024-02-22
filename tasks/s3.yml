@@ -65,7 +65,7 @@
 
 - name: create S3 bucket
   shell:
-    'aws s3api create-bucket --bucket {{ item.bucket_name }}'
+    'aws --no-verify-ssl s3api create-bucket  --bucket {{ item.bucket_name }}'
   args:
     executable: /bin/bash
   become_user: '{{ dataverse.payara.user }}'

@@ -9,7 +9,7 @@
 
 - name: create S3 bucket(s)
   shell:
-    cmd: 'aws s3api create-bucket --bucket {{ item.bucket_name }} --endpoint-url {{ item.custom_endpoint_url }} --profile {{ item.storage_driver_id }}'
+    cmd: 'aws --no-verify-ssl s3api create-bucket --bucket {{ item.bucket_name }} --endpoint-url {{ item.custom_endpoint_url }} --profile {{ item.storage_driver_id }}'
     executable: /bin/bash
   become: true
   become_user: '{{ dataverse.payara.user }}'
