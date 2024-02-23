@@ -146,7 +146,7 @@
   when: ansible_os_family == "Debian"
 
 - name: check if dataverse is deployed in payara
-  shell: "/usr/local/payara5//bin/asadmin list-applications | grep -q '^dataverse'"
+  shell: "{{ payara_dir }}/bin/asadmin list-applications | grep -q '^dataverse'"
   register: dataverse_is_deployed
   ignore_errors: True
   when:
