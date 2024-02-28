@@ -24,6 +24,8 @@
        value: "{{ describo.secret }}"
      - name: arp.rocrate.previewgenerator.address
        value: http://localhost:8985
+     - name: arp.cedar.proxyApiKey
+       value: "{{ cedar.key }}"
 
 - set_fact:
     arp_settings: '{{ arp_settings | rekey_on_member("name") }}'
