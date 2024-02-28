@@ -95,7 +95,7 @@
   set_fact:
     arp_api_calculated_settings:
      - name: arp.cedar.domain
-       value: http://localhost:{{ cedar.domain }}
+       value: "{{ cedar.domain }}"
      - name: arp.aroma.address
        value: https://{{ site_fqdn }}/aroma/
      - name: arp.solr.updater.address
