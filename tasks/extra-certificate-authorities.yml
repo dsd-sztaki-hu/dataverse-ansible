@@ -27,6 +27,18 @@
   loop: "{{ extra_certificates.files | product(extra_certificates.java_keystores) | list }}"
   notify: enable and restart payara
 
-## TODO: we may want to add certificate to other keystores later
-## e.g.
-## * system keystore for debian (/etc/ssl/certs) or redhat (?)
+- name: add certificate to system keystore on debian/ubuntu
+  copy:
+    src: '{{ item }}'
+    dest: /usr/local/share/ca-certificates/{{ item }}
+  with_items: '{{ extra_certificates.files }}'
+  register: system_cert_upload
+  when: ansible_os_family == "Debian"
+
+- name: update system keystore on debian/ubuntu
+  shell: update-ca-certificates
+  when:
+   - ansible_os_family == "Debian"
+   - system_cert_upload.changed
+
+## TODO: we may want to add to system keystore for redhat
