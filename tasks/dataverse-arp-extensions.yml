@@ -104,6 +104,8 @@
        value: http://localhost:8985
      - name: arp.w3id.base
        value: "{{ cedar.w3id }}"
+     - name: ":FilePIDsEnabled"
+       value: "true"
 
 - name: set settings by dataverse api
   uri:
