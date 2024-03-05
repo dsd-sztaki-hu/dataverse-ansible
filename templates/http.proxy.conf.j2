@@ -88,8 +88,10 @@ Listen {{ apache.ssl.port }} https
   ErrorDocument 503 /503.html
   ProxyPassMatch ^/503.html$ !
 
-  # allow munin
+  # allow aroma and docs
   ProxyPassMatch ^/aroma !
+  ProxyPassMatch ^/search-documentation !
+  ProxyPassMatch ^/documentation !
 
   # allow munin
   ProxyPassMatch ^/munin !
