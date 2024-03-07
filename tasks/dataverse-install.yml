@@ -70,17 +70,6 @@
     regexp: '^DV_SU_PASSWORD'
     line: 'DV_SU_PASSWORD="{{ dataverse.adminpass }}"'
 
-- name: bash aliases won't expand in non-interactive shells
-  replace:
-    path: /tmp/dvinstall/as-setup.sh
-    regexp: '{{ item.regexp }}'
-    replace: '{{ item.replace }}'
-  with_items:
-    - { regexp: '^(.*)ALIAS=rserve_password_alias(.*)$', replace: '  ./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.rserve.password=${RSERVE_PASS}"' }
-    - { regexp: '^(.*)ALIAS=doi_password_alias(.*)$', replace: '  ./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddoi.password=${DOI_PASSWORD}"' }
-    - { regexp: '^(.*)ALIAS=db_password_alias(.*)$', replace: '  ./asadmin $ASADMIN_OPTS set "resources.jdbc-connection-pool.dvnDbPool.property.password=${DB_PASS}"' }
-  when: dataverse.payara.zipurl is not match(".*glassfish-4.1.zip")
-
 - name: ensure as-setup.sh is executable
   file:
     path: /tmp/dvinstall/as-setup.sh
@@ -137,8 +126,8 @@
   set_fact:
     python_bin: '/usr/bin/python3'
   when:
-  - ansible_os_family == "RedHat"
-  - ansible_distribution_major_version == "8"
+  - ansible_os_family == "RedHat" and
+    (ansible_distribution_major_version == "8") or (ansible_distribution_major_version == "9")
 
 - name: Debian only offers Python3 nowadays
   set_fact:
