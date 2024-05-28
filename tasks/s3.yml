@@ -72,6 +72,9 @@
     name: awscli
   when: s3[0].create_bucket == true
 
+- ansible.builtin.import_tasks: s3_custom_endpoint_url.yml
+  when: custom_endpoint_url | length > 0
+
 - name: create S3 bucket
   shell:
     'aws --no-verify-ssl s3api create-bucket  --bucket {{ item.bucket_name }}'

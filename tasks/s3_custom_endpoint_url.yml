@@ -17,6 +17,8 @@
     PATH: "{{ lookup('env', 'PATH') }}:/usr/local/bin"
   when: item.create_bucket == true
   with_items: '{{ s3 }}'
+  register: output
+  changed_when: "'Command create-jvm-options executed successfully.' in output.stdout"
 
 - name: enable CORS on S3 bucket
   shell:
@@ -26,6 +28,9 @@
   become: yes
   become_user: '{{ dataverse.payara.user }}'
   environment:
+    PATH: "{{ lookup('env', 'PATH') }}:/usr/local/bin"
   when: item.download_redirect == true or
     item.upload_redirect == true
   with_items: '{{ s3 }}'
+  register: output
+  changed_when: "'Command create-jvm-options executed successfully.' in output.stdout"
