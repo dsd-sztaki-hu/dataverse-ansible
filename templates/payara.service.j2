@@ -9,6 +9,8 @@ ExecStart = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-c
 ExecStop = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar stop-domain
 ExecReload = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar restart-domain
 LimitNOFILE=65000
+LimitSTACK=128M
+LimitNPROC=32768
 TimeoutStartSec={{ dataverse.payara.launch_timeout }}s
 
 [Install]
