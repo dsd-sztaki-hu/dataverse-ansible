@@ -74,7 +74,7 @@
 	seriesName	Name	The name of the dataset series		TEXT	66	#VALUE	true	false	false	true	false	false	series	citation	https://dataverse.org/schema/citation/seriesName
 	seriesInformation	Information	Can include 1) a history of the series and 2) a summary of features that apply to the series		TEXTBOX	67	#VALUE	false	false	false	false	false	false	series	citation	https://dataverse.org/schema/citation/seriesInformation
 	software	Software	Information about the software used to generate the Dataset		NONE	68	,	false	false	true	false	false	false		citation	https://www.w3.org/TR/prov-o/#wasGeneratedBy
-	softwareName	Name	The name of software used to generate the Dataset		TEXT	69	#VALUE	false	true	false	false	false	false	software	citation	https://dataverse.org/schema/citation/softwareName
+	softwareName	Name	The name of software used to generate the Dataset		TEXT	69	#VALUE	false	false	false	false	false	false	software	citation	https://dataverse.org/schema/citation/softwareName
 	softwareVersion	Version	The version of the software used to generate the Dataset, e.g. 4.11		TEXT	70	#NAME: #VALUE	false	false	false	false	false	false	software	citation	https://dataverse.org/schema/citation/softwareVersion
 	relatedMaterial	Related Material	Information, such as a persistent ID or citation, about the material related to the Dataset, such as appendices or sampling information available outside of the Dataset		TEXTBOX	71		false	false	true	false	false	false		citation	https://dataverse.org/schema/citation/relatedMaterial
 	relatedDatasets	Related Dataset	Information, such as a persistent ID or citation, about a related dataset, such as previous research on the Dataset's subject		TEXTBOX	72		false	false	true	false	false	false		citation	http://purl.org/dc/terms/relation
