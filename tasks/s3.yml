@@ -73,7 +73,7 @@
   when: s3[0].create_bucket == true
 
 - ansible.builtin.import_tasks: s3_custom_endpoint_url.yml
-  when: custom_endpoint_url | length > 0
+  when: custom_endpoint_urls | length > 0
 
 - name: create S3 bucket
   shell:
@@ -108,7 +108,7 @@
   environment:
     PATH: "{{ lookup('env', 'PATH') }}:/usr/local/bin"
   when: (item.download_redirect == true or item.upload_redirect == true)
-    and custom_endpoint_url | length == 0
+    and custom_endpoint_urls | length == 0
     and item.cors_already_set == false
   with_items: '{{ s3 }}'
 
