@@ -217,7 +217,7 @@ dataverse:
   jacoco:
     enabled: false
     home: /tmp/jacoco
-    version: 0.8.7
+    version: 0.8.12
   file_fixity_checksum_algorithm: "MD5"
   memheap: 4096
   options:
@@ -246,22 +246,23 @@ dataverse:
   service_email: noreply@dataverse.yourinstitution.edu
   smtp: localhost # or the FQDN of your organization's SMTP relay
   solr:
-    download_url: https://archive.apache.org/dist/solr/solr/9.3.0/solr-9.3.0.tgz
+    download_url: https://archive.apache.org/dist/solr/solr/9.4.1/solr-9.4.1.tgz
     group: solr
     root: /usr/local/solr
     user: solr
-    version: 9.3.0
+    version: 9.4.1
     listen: 127.0.0.1
-    checksum: sha256:2a924a776d7c06dea561f12bdb17291dbaecc9e9a06f363d4599acb7fb7bfa71
+    checksum: sha256:41015d7a693fefa4b8a537f5d0982adae8f13f382edf39c94a3497f9b3783250
   srcdir: /opt/dataverse/dataverse
   thumbnails: false
   unittests:
     enabled: false
     argument: '-DcompilerArgument=-Xlint:unchecked test -P all-unit-tests'
+  uploads_dir: /tmp
   usermgmtkey: burrito
   deployment:
     upgrade_only: false
-  version: '6.2'
+  version: '6.3'
 #  robots_txt_url: https://guides.dataverse.org/en/latest/_downloads/3a5cd7a283eecd5e93289e30af713554/robots.txt
   version: '5.14'
 
@@ -309,8 +310,7 @@ grafana:
 
 java:
   version: 17
-  # this breaks templating.
-  #home: /usr/lib/jvm/java-{{ java.version}}
+java_home: /usr/lib/jvm/java-{{ java.version }}
 
 localstack:
   enabled: false
@@ -386,7 +386,7 @@ prometheus:
   user: prometheus
 
 rserve:
-  install: true
+  install: false
   host: localhost
   user: rserve
   group: rserve

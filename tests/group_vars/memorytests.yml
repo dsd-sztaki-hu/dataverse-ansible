@@ -154,7 +154,7 @@ dataverse:
   jacoco:
     enabled: false
     home: /tmp/jacoco
-    version: 0.8.7
+    version: 0.8.12
   file_fixity_checksum_algorithm: "MD5"
   language:
     enabled: false # setting this to true allows the language task to run
@@ -243,18 +243,19 @@ dataverse:
     group: solr
     root: /usr/local/solr
     user: solr
-    version: 8.11.1
-    checksum: sha256:9ec540cbd8e45f3d15a6b615a22939f5e6242ca81099951a47d3c082c79866a9
+    version: 9.4.1
+    checksum: sha256:41015d7a693fefa4b8a537f5d0982adae8f13f382edf39c94a3497f9b3783250
     listen: 127.0.0.1
   srcdir: /tmp/dataverse
   thumbnails: false
   unittests:
     enabled: false
     argument: '-DcompilerArgument=-Xlint:unchecked test -P all-unit-tests'
+  uploads_dir: /tmp
   usermgmtkey: burrito
   deployment:
     upgrade_only: false
-  version: '6.2'
+  version: '6.3'
 
 build_guides: false
 
