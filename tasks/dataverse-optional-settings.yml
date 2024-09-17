@@ -17,7 +17,7 @@
   when: dataverse.options.provcollectionenabled
 
 - name: set SystemEmail as a jvm-option now
-  shell: '{{ payara_dir}}/bin/asadmin create-jvm-options "-Ddataverse.mail.system-email={{ dataverse.service_email }}"'
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.mail.system-email" "{{ dataverse.service_email }}"'
   when: dataverse.service_email is defined
 
 - name: set TabularIngestSizeLimit when provided
@@ -30,25 +30,25 @@
 - name: set page size limit for ListIdentifiers
   become: yes
   become_user: "{{ dataverse.payara.user }}"
-  shell: '{{ payara_dir}}/bin/asadmin create-jvm-options "-Ddataverse.oai.server.maxidentifiers={{ harvest.oaiserver.maxidentifiers }}"'
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.oai.server.maxidentifiers" "{{ harvest.oaiserver.maxidentifiers }}"'
   when: harvest.oaiserver.maxidentifiers is defined
 
 - name: set page size limit for ListRecords
   become: yes
   become_user: "{{ dataverse.payara.user }}"
-  shell: '{{ payara_dir}}/bin/asadmin create-jvm-options "-Ddataverse.oai.server.maxrecords={{ harvest.oaiserver.maxrecords }}"'
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.oai.server.maxrecords" "{{ harvest.oaiserver.maxrecords }}"'
   when: harvest.oaiserver.maxrecords is defined
 
 - name: upload to /tmp until we move away from JSF
   become: yes
   become_user: "{{ dataverse.payara.user }}"
-  shell: '{{ payara_dir}}/bin/asadmin create-jvm-options "-Ddataverse.files.uploads={{ dataverse.uploads_dir }}"'
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.files.uploads" "{{ dataverse.uploads_dir }}"'
   when: dataverse.uploads_dir is defined
 
 - name: set dataverse.feature.index-harvested-metadata-source for harvesting tests
   become: yes
   become_user: "{{ dataverse.payara.user }}"
-  shell: '{{ payara_dir }}/bin/asadmin create-jvm-options "-Ddataverse.feature.index-harvested-metadata-source=true"'
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.feature.index-harvested-metadata-source" "true"'
   when: dataverse.api.test_suite == true
 
 - name: set showListFirst value in the deployed idpselect_config.js
