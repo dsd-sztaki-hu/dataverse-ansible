@@ -87,9 +87,9 @@
     - ansible_os_family == "Debian"
     - dataverse.thumbnails
 
-- name: install curl on Debian/Ubuntu
+- name: install curl and rsync on Debian/Ubuntu
   package:
-    name: curl
+    name: curl, rsync
   when:
     - ansible_os_family == "Debian"
 
