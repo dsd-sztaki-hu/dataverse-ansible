@@ -5,6 +5,12 @@
   debug:
     msg: '##### SOLR #####'
 
+- name: if solr directory already exists, make a backup of the indexes within
+  shell: [ -d {{ dataverse.solr.root }} ] && tar czf /var/backups/solr_`date +%Y%m%d_%H%M%S`.tar.gz {{ dataverse.solr.root }}/server/solr/
+  when:
+   - dataverse.solr.backup is defined
+   - dataverse.solr.backup
+
 - name: ensure EPEL repository for RedHat/Rocky
   yum: name=epel-release state=latest
   when: ansible_os_family == "RedHat"

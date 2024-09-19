@@ -253,6 +253,7 @@ dataverse:
     version: 9.4.1
     listen: 127.0.0.1
     checksum: sha256:41015d7a693fefa4b8a537f5d0982adae8f13f382edf39c94a3497f9b3783250
+    backup: false
   srcdir: /opt/dataverse/dataverse
   thumbnails: false
   unittests:
