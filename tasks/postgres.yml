@@ -47,6 +47,15 @@
    - not db.use_rds
   notify: enable and restart postgres
 
+- name: set log_min_duration_statement if defined
+  lineinfile:
+    path: '{{ postgres_config_dir }}/postgresql.conf'
+    regexp: '^#log_min_duration_statement'
+    line: 'log_min_duration_statement = {{ db.postgres.log_min_duration_statement }}'
+  when:
+   - db.postgres.log_min_duration_statement is defined
+  notify: enable and restart postgres
+
 - meta: flush_handlers
 
 - name: dataverse python installer wants to be a postgres admin
