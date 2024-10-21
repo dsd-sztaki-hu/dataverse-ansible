@@ -5,7 +5,18 @@
     msg: '##### DATAVERSE LICENSES #####'
 
 #### you need community.postgresql from ansible galaxy for this
-- name: get api key for dataverseAdmin from the database
+- name: set {{ dataverse.licenses.user }} to superuser
+  community.postgresql.postgresql_query:
+    db: "{{ db.postgres.name }}"
+    login_user: "{{ db.postgres.user }}"
+    login_password: "{{ db.postgres.pass }}"
+    login_host: "{{ db.postgres.host }}"
+    query: UPDATE authenticateduser SET superuser=true WHERE useridentifier='{{ dataverse.licenses.user }}'
+  changed_when: false
+#  register: token_result
+#  failed_when: token_result.rowcount != 1
+
+- name: get api key for {{ dataverse.licenses.user }} from the database
   community.postgresql.postgresql_query:
     db: "{{ db.postgres.name }}"
     login_user: "{{ db.postgres.user }}"
