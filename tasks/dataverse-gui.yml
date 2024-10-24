@@ -19,7 +19,7 @@
     mode: '0644'
     owner: '{{ dataverse.payara.user }}'
     group: '{{ dataverse.payara.group }}'
-  with_fileglob: '{{ dataverse.branding.favicons_directory }}/*.ico'
+  with_fileglob: '{{ dataverse.branding.favicons_directory }}/*'
 
 - name: copy branding files
   copy:
