@@ -5,6 +5,8 @@
     method: PUT
     body: "{{ dataverse.handlenet.independenthandleservice }}"
     body_format: raw
+  retries: 10
+  delay: 10
 
 - name: set HandleAuthHandle
   uri:
