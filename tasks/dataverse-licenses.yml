@@ -13,8 +13,8 @@
     login_host: "{{ db.postgres.host }}"
     query: UPDATE authenticateduser SET superuser=true WHERE useridentifier='{{ dataverse.licenses.user }}'
   changed_when: false
-#  register: token_result
-#  failed_when: token_result.rowcount != 1
+  register: superuser_result
+  failed_when: superuser_result.statusmessage == 'UPDATE 0'
 
 - name: get api key for {{ dataverse.licenses.user }} from the database
   community.postgresql.postgresql_query:

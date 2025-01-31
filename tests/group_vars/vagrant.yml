@@ -273,7 +273,7 @@ db:
     jdbcurl:
     log_lock_waits: true
     log_statements: none
-    version: 13
+    version: "{{ pg_version | default('13') }}"
     port: 5432
     replication:
       enabled: false
@@ -378,9 +378,9 @@ postfix:
 
 prometheus:
   install: false
-  node_exporter: https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
+  node_exporter: "https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-{{ arch | default('amd64') }}.tar.gz"
   root: /usr/local/prometheus
-  url: https://github.com/prometheus/prometheus/releases/download/v2.19.1/prometheus-2.19.1.linux-amd64.tar.gz
+  url: "https://github.com/prometheus/prometheus/releases/download/v2.19.1/prometheus-2.19.1.linux-{{ arch | default('amd64') }}.tar.gz"
   user: prometheus
 
 rserve:

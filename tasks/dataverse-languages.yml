@@ -47,10 +47,15 @@
     state: present
     timeout: "{{ dataverse.payara.launch_timeout }}"
 
-- name: really wait for Payara to become ready
-  ansible.builtin.pause:
-    seconds: 120
-  when: (dataverse_lang_directory.stdout | trim) == ''
+- name: really wait for Payara to become ready (language pack)
+  ansible.builtin.uri:
+    url: "http://localhost:8080/api/info/version"
+    method: GET
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 5
 
 - name: clone dataverse language packs
   git:
