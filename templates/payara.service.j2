@@ -5,11 +5,7 @@ After = syslog.target network.target
 [Service]
 Type = forking
 User={{ dataverse.payara.user }}
-ExecStart = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar start-domain
-{% if dataverse.payara.debug %}
-# Set debug port settings in  /usr/local/payara6/glassfish/domains/domain1/config/domain.xml
-ExecStartPost=/usr/local/payara6/bin/asadmin set server.java-config.debug-options="-agentlib:jdwp=transport=dt_socket,address=*:{{ dataverse.payara.debug_port | default(9009) }},server=y,suspend=n"
-{% endif %}
+ExecStart = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar start-domain --debug {{ dataverse.payara.debug is defined and dataverse.payara.debug }}
 ExecStop = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar stop-domain
 ExecReload = /usr/bin/java -jar {{ payara_dir }}/glassfish/lib/client/appserver-cli.jar restart-domain
 LimitNOFILE=65000
