@@ -107,6 +107,12 @@
      - name: ":FilePIDsEnabled"
        value: "true"
 
+- name: add kg ingest command if defined
+  set_fact:
+    arp_api_calculated_settings: "{{ arp_api_calculated_settings + [{'name': 'arp.kg.ingestCommand', 'value': arp_kg.ingestion.command}] }}"
+  when: arp_kg.ingestion.command is defined
+
+
 - name: set settings by dataverse api
   uri:
     method: PUT
