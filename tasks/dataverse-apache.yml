@@ -103,6 +103,26 @@
     mode: 0644
   notify: enable and restart apache
 
+- name: turn apache signature off
+  lineinfile:
+    path: '{{ apache_config_dir }}/security.conf'
+    regexp: '^ServerSignature '
+    line: 'ServerSignature Off'
+  when:
+   - apache.hide_info is defined
+   - apache.hide_info
+  notify: enable and restart apache
+
+- name: turn servertokens setting to prod
+  lineinfile:
+    path: '{{ apache_config_dir }}/security.conf'
+    regexp: '^ServerTokens '
+    line: 'ServerTokens Prod'
+  when:
+   - apache.hide_info is defined
+   - apache.hide_info
+  notify: enable and restart apache
+
 - name: this package provides semanage on RHEL / Rocky 8 and 9
   ansible.builtin.package:
     name: policycoreutils-python-utils
