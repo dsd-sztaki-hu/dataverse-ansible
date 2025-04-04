@@ -40,6 +40,10 @@ letsencrypt:
     autorenew: true
     email:
     user: certbot
+    # Use the letsencrypt staging server for deployment tests
+    # to avoid rate limiting:
+    # https://letsencrypt.org/docs/duplicate-certificate-limit/
+    test_cert: false
 
 dataverse_misc_files_dir: '/opt/dv'
 
@@ -211,8 +215,8 @@ dataverse:
     request_timeout: 1800
     root: /usr/local
     dir: payara6
-    zipurl: https://nexus.payara.fish/repository/payara-community/fish/payara/distributions/payara/6.2023.8/payara-6.2023.8.zip
-    zipchecksum: sha256:108ed0fa7f97bb3833ff00610a4951dd41389e2647dffe28132ad54231af694a
+    zipurl: https://nexus.payara.fish/repository/payara-community/fish/payara/distributions/payara/6.2025.2/payara-6.2025.2.zip
+    zipchecksum: sha256:c06edc1f39903c874decf9615ef641ea18d3f7969d38927c282885960d5ee796
   google_analytics_key:
   jacoco:
     enabled: false
@@ -263,7 +267,7 @@ dataverse:
   usermgmtkey: burrito
   deployment:
     upgrade_only: false
-  version: '6.3'
+  version: '6.6'
 #  robots_txt_url: https://guides.dataverse.org/en/latest/_downloads/3a5cd7a283eecd5e93289e30af713554/robots.txt
 
 build_guides: false
@@ -279,8 +283,9 @@ db:
     jdbcurl: 
     log_lock_waits: true
     log_statements: none
-    version: "{{ pg_version | default('13') }}"
+    version: "{{ pg_version | default('16') }}"
     port: 5432
+    query_counts: false
     replication:
       enabled: false
       # all servers must be defined so firewalls may be opened accordingly

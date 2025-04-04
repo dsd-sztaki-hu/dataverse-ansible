@@ -90,16 +90,7 @@
     state: started
   register: payara_start
 
-- name: wait for Payara base endpoint to become ready
-  ansible.builtin.uri:
-    url: "http://localhost:8080/api/info/version"
-    method: GET
-    status_code: 200
-  register: result
-  until: result.status == 200
-  retries: 60
-  delay: 5
-  when: payara_start.changed
+- ansible.builtin.import_tasks: check_index_status.yml
 
 - name: start solr indexing -- if this was an upgrade to an existing install, the install scripts reset the solr indexes
   ansible.builtin.get_url:
