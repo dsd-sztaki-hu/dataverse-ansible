@@ -41,21 +41,7 @@
   service: name=payara state=restarted
   when: (dataverse_lang_directory.stdout | trim) == ''
 
-- name: wait for payara to become ready
-  wait_for:
-    port: 8009
-    state: present
-    timeout: "{{ dataverse.payara.launch_timeout }}"
-
-- name: really wait for Payara to become ready (language pack)
-  ansible.builtin.uri:
-    url: "http://localhost:8080/api/info/version"
-    method: GET
-    status_code: 200
-  register: result
-  until: result.status == 200
-  retries: 60
-  delay: 5
+- ansible.builtin.import_tasks: check_index_status.yml
 
 - name: clone dataverse language packs
   git:
