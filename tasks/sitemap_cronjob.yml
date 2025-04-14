@@ -1,0 +1,10 @@
+---
+
+- name: add sitemap refresh cronjob
+  cron:
+    name: sitemap_refresh
+    cron_file: sitemap_refresh
+    user: dataverse
+    hour: 0
+    minute: 0
+    job: curl -X POST http://localhost:8080/api/admin/sitemap

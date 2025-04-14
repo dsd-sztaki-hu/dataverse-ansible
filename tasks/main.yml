@@ -209,6 +209,11 @@
   tags:
   - pg_backups
 
+- ansible.builtin.import_tasks: sitemap_cronjob.yml
+  when: dataverse.sitemap_cronjob is defined and dataverse.sitemap_cronjob
+  tags:
+  - sitemap_cronjob
+
 - ansible.builtin.import_tasks: schemaspy.yml
   when: schemaspy.enabled == true
   tags:
