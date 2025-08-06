@@ -39,7 +39,7 @@
   shell: 'asadmin-create-or-replace-option.sh "dataverse.oai.server.maxrecords" "{{ harvest.oaiserver.maxrecords }}"'
   when: harvest.oaiserver.maxrecords is defined
 
-- name: upload to /tmp until we move away from JSF
+- name: upload to {{ dataverse.uploads_dir }} until we move away from JSF
   become: yes
   become_user: "{{ dataverse.payara.user }}"
   shell: 'asadmin-create-or-replace-option.sh "dataverse.files.uploads" "{{ dataverse.uploads_dir }}"'

@@ -101,14 +101,14 @@
 - name: get shibAuthProvider.json to host
   get_url:
     url: http://guides.dataverse.org/en/{{ dataverse.version if dataverse_branch == 'release' else 'latest' }}/_static/installation/files/etc/shibboleth/shibAuthProvider.json
-    dest: /tmp/shibAuthProvider.json
+    dest: '{{ dataverse.tmpdir }}/shibAuthProvider.json'
   register: shibAuthProvider_json_download
 
 - name: enable shibboleth authentication in dataverse
   uri:
     url: http://localhost:8080/api/admin/authenticationProviders
     method: POST
-    src: /tmp/shibAuthProvider.json
+    src: '{{ dataverse.tmpdir }}/shibAuthProvider.json'
     body_format: json
     remote_src: yes
     status_code: 201
@@ -137,7 +137,7 @@
 - name: upload mod_shib-to-shibd.te and installer
   copy:
     src: '{{ item.file }}'
-    dest: '/tmp'
+    dest: '{{ dataverse.tmpdir }}'
     mode: '{{ item.mode }}'
   with_items:
     - { file: mod_shib-to-shibd.te, mode: '0400' }
@@ -146,13 +146,13 @@
 
 - name: install the policy to allow mod_shib to talk to shibd
   command:
-    cmd: '/tmp/install-mod_shib-to-shibd.sh'
-    chdir: '/tmp'
+    cmd: '{{ dataverse.tmpdir }}/install-mod_shib-to-shibd.sh'
+    chdir: '{{ dataverse.tmpdir }}'
   when: selinux_enabled
 
 - name: remove policy files after install
   file:
-    path: '/tmp/{{ item }}'
+    path: '{{ dataverse.tmpdir }}/{{ item }}'
     state: absent
   with_items:
     - install-mod_shib-to-shibd.sh

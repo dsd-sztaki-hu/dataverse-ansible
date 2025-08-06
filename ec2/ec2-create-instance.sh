@@ -7,6 +7,7 @@ REPO_URL_DEFAULT="https://github.com/IQSS/dataverse.git"
 BRANCH_DEFAULT="develop"
 PEM_DEFAULT=${HOME}
 VERBOSE_ARG=""
+DATAVERSE_TEMPDIR=/tmp
 
 # rocky linux 9.4 official, us-east-1
 AWS_AMI_DEFAULT='ami-09fb459fad4613d55'
@@ -268,8 +269,8 @@ if [ ! -z "$LOCAL_LOG_PATH" ]; then
    # 6 query_count.out
    rsync -av -e "ssh -i $PEM_FILE" --ignore-missing-args $AWS_USER@$PUBLIC_DNS:/tmp/query_count.out $LOCAL_LOG_PATH/
    # 7 install.out and setup-all.*.log
-   rsync -av -e "ssh -i $PEM_FILE" --ignore-missing-args $AWS_USER@$PUBLIC_DNS:/tmp/dvinstall/install.out $LOCAL_LOG_PATH/
-   rsync -av -e "ssh -i $PEM_FILE" --ignore-missing-args $AWS_USER@$PUBLIC_DNS:/tmp/dvinstall/setup-all.*.log $LOCAL_LOG_PATH/
+   rsync -av -e "ssh -i $PEM_FILE" --ignore-missing-args $AWS_USER@$PUBLIC_DNS:$DATAVERSE_TEMPDIR/dvinstall/install.out $LOCAL_LOG_PATH/
+   rsync -av -e "ssh -i $PEM_FILE" --ignore-missing-args $AWS_USER@$PUBLIC_DNS:$DATAVERSE_TEMPDIR/dvinstall/setup-all.*.log $LOCAL_LOG_PATH/
 fi
 
 # Port 8080 has been added because Ansible puts a redirect in place

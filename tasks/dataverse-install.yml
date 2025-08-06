@@ -22,12 +22,12 @@
   when: dataverse_branch != "release"
   
 - name: fix perms on dataverse-war
-  file: path=/tmp/dvinstall/dataverse.war mode=0644
+  file: path='{{ dataverse.srcdir }}/dvinstall/dataverse.war' mode=0644
 
 - name: grab branch copies of installer source when using branch
   copy:
     src: '{{ dataverse.srcdir }}/scripts/installer/{{ item }}'
-    dest: '/tmp/dvinstall/{{ item }}'
+    dest: '{{ dataverse.tmpdir }}/dvinstall/{{ item }}'
     mode: '0755'
     remote_src: yes
   with_items:
@@ -41,7 +41,7 @@
 - name: grab branch api setup scripts as well when using branch
   copy:
     src: '{{ dataverse.srcdir }}/scripts/api/{{ item }}'
-    dest: '/tmp/dvinstall/{{ item }}'
+    dest: '{{ dataverse.tmpdir }}/dvinstall/{{ item }}'
     mode: '0755'
     remote_src: yes
   with_items:
@@ -57,8 +57,8 @@
 - name: copy jhove files from branch
   copy:
     src: "{{ item }}"
-    dest: "/tmp/dvinstall/"
-    remote_src: yes
+    dest: "{{ dataverse.tmpdir }}/dvinstall/"
+'    remote_src: yes
   with_items:
     - "{{ dataverse.srcdir }}/conf/jhove/jhove.conf"
     - "{{ dataverse.srcdir }}/conf/jhove/jhoveConfig.xsd"
@@ -66,13 +66,13 @@
 
 - name: set dataverse adminpass in setup-all
   lineinfile:
-    path: /tmp/dvinstall/setup-all.sh
+    path: '{{ dataverse.tmpdir }}/dvinstall/setup-all.sh'
     regexp: '^DV_SU_PASSWORD'
     line: 'DV_SU_PASSWORD="{{ dataverse.adminpass }}"'
 
 - name: ensure as-setup.sh is executable
   file:
-    path: /tmp/dvinstall/as-setup.sh
+    path: '{{ dataverse.tmpdir }}/dvinstall/as-setup.sh'
     mode: 0755
   when: dataverse.payara.zipurl is not match(".*glassfish-4.1.zip")
 
@@ -83,7 +83,7 @@
 - name: place default.config template
   template:
     src: default.config.j2
-    dest: /tmp/dvinstall/default.config
+    dest: '{{ dataverse.tmpdir }}/dvinstall/default.config'
     owner: root
     group: root
     mode: 0644
@@ -92,7 +92,7 @@
 - name: place default.config
   copy:
     src: default.config
-    dest: /tmp/dvinstall/default.config
+    dest: '{{ dataverse.tmpdir }}/dvinstall/default.config'
     owner: '{{ dataverse.payara.user }}'
     group: '{{ dataverse.payara.group }}'
     mode: 0600
@@ -104,12 +104,12 @@
 
 - name: allow installer write access
   file:
-    path: /tmp/dvinstall
+    path: '{{ dataverse.tmpdir }}/dvinstall'
     owner: '{{ dataverse.payara.user }}'
 
 - name: patch installAppServer.py so that FILES_DIR points to the correct location
   lineinfile:
-    path: /tmp/dvinstall/installAppServer.py
+    path: '{{ dataverse.tmpdir }}/dvinstall/installAppServer.py'
     regexp: "^   os.environ..FILES_DIR.. = "
     line: "   os.environ['FILES_DIR'] = \"{{ dataverse.filesdirs[0].path }}\""
   when: dataverse.filesdirs[0] is defined and
@@ -117,7 +117,7 @@
 
 - name: patch as-setup.sh so it doesn't hardcode siteUrl
   lineinfile:
-    path: /tmp/dvinstall/as-setup.sh
+    path: '{{ dataverse.tmpdir }}/dvinstall/as-setup.sh'
     regexp: '(.*)-Ddataverse.siteUrl(.*)'
     line: '  ./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.siteUrl={{ siteUrl_escaped }}"'
   when: dataverse.payara.zipurl is not match(".*glassfish-4.1.zip")
@@ -143,7 +143,7 @@
    - dataverse.deployment.upgrade_only
 
 - name: upgrade only -- deploy dataverse war
-  shell: '{{ payara_dir }}/bin/asadmin redeploy --name dataverse /tmp/dvinstall/dataverse.war'
+  shell: '{{ payara_dir }}/bin/asadmin redeploy --name dataverse {{ dataverse.tmpdir }}/dvinstall/dataverse.war'
   become: yes
   become_user: '{{ dataverse.payara.user }}'
   when:
@@ -152,16 +152,16 @@
    - dataverse_is_deployed is succeeded
 
 - name: fire off installer
-  shell: '{{ python_bin }} /tmp/dvinstall/install.py -f --config_file=default.config --noninteractive > /tmp/dvinstall/install.out 2>&1'
+  shell: '{{ python_bin }} {{ dataverse.tmpdir }}/dvinstall/install.py -f --config_file=default.config --noninteractive > {{ dataverse.tmpdir }}/dvinstall/install.out 2>&1'
   become: yes
   become_user: '{{ dataverse.payara.user }}'
   args:
-    chdir: /tmp/dvinstall
-  register: dataverse_installer_was_run
+    chdir: '{{ dataverse.tmpdir }}/dvinstall'
+    register: dataverse_installer_was_run
   when: dataverse.deployment.upgrade_only is not defined or not dataverse.deployment.upgrade_only
 
 - name: upgrade only -- deploy dataverse war
-  shell: '{{ payara_dir }}/bin/asadmin redeploy --name dataverse /tmp/dvinstall/dataverse.war'
+  shell: '{{ payara_dir }}/bin/asadmin redeploy --name dataverse {{ dataverse.tmpdir }}/dvinstall/dataverse.war'
   become: yes
   become_user: '{{ dataverse.payara.user }}'
   when: dataverse.deployment.upgrade_only is defined and dataverse.deployment.upgrade_only

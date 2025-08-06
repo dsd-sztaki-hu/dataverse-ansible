@@ -198,7 +198,7 @@ dataverse:
     nodejs:
       version: 18
     repo: "http://github.com/IQSS/dataverse-frontend"
-    srcdir: /tmp/dataverse-frontend
+    srcdir: /opt/dataverse/dataverse-frontend
   payara:
     user: dataverse
     group: dataverse
@@ -255,6 +255,7 @@ dataverse:
     checksum: sha256:41015d7a693fefa4b8a537f5d0982adae8f13f382edf39c94a3497f9b3783250
     backup: false
   srcdir: /opt/dataverse/dataverse
+  tmpdir: /tmp
   thumbnails: false
   unittests:
     enabled: false

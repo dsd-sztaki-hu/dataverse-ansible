@@ -78,12 +78,12 @@
 
 - name: sampledata publishes root dataverse
   file:
-    path: '/tmp/dataverse'
+    path: '{{ dataverse.srcdir }}'
     state: directory
 
 - name: sampledata publishes root dataverse
   file:
-    path: '/tmp/dataverse/root_dv_published'
+    path: '{{ dataverse.srcdir }}/root_dv_published'
     state: touch
 
 - name: give dataverse a breather to avoid timeouts

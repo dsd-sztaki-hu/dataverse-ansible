@@ -7,18 +7,18 @@
 
 - name: stage custom metadata blocks
   file:
-    path: /tmp/dataverse/custom_metadata_blocks
+    path: '{{ dataverse.tmpdir }}/custom_metadata_blocks'
     state: directory
 
 - name: grab custom metadata blocks
   get_url:
     url: '{{ item }}'
-    dest: /tmp/dataverse/custom_metadata_blocks
+    dest: '{{ dataverse.tmpdir }}/custom_metadata_blocks'
   loop: '{{ dataverse.custom_metadata_blocks.urls }}'
 
 - name: read custom metadata block list
   find:
-    path: /tmp/dataverse/custom_metadata_blocks
+    path: '{{ dataverse.tmpdir }}/custom_metadata_blocks'
   register: custom_metadata_block_list
 
 - name: load custom metadata blocks
@@ -40,19 +40,19 @@
 - name: "release case: get develop update-fields.sh from develop"
   ansible.builtin.get_url:
     url: '{{ dataverse_raw_repo }}/develop/conf/solr/update-fields.sh'
-    dest: /tmp/dvinstall/update-fields.sh
+    dest: '{{ dataverse.tmpdir }}/dvinstall/update-fields.sh'
     mode: 0755
   when: dataverse_branch == 'release'
 
 - name: "branch case: get develop update-fields.sh from branch"
   ansible.builtin.get_url:
     url: '{{ dataverse_raw_repo }}/{{ dataverse_branch }}/conf/solr/update-fields.sh'
-    dest: /tmp/dvinstall/update-fields.sh
+    dest: '{{ dataverse.tmpdir }}/dvinstall/update-fields.sh'
     mode: 0755
   when: dataverse_branch != 'release'
 
 - name: update custom metadata blocks
-  shell: '/tmp/dvinstall/update-fields.sh {{ dataverse.solr.root }}/server/solr/collection1/conf/schema.xml'
+  shell: '{{ dataverse.tmpdir }}/dvinstall/update-fields.sh {{ dataverse.solr.root }}/server/solr/collection1/conf/schema.xml'
   args:
     stdin: '{{ current_schema.content }}'
   become: yes

@@ -10,13 +10,13 @@
 - name: place selinux collectd policy package
   copy:
     src: '{{ item }}'
-    dest: '/tmp/'
+    dest: '{{ dataverse.tmpdir }}'
   with_items:
     - collectd_t.pp
     - collectd_t.te
 
 - name: import selinux collectd policypackage
-  shell: 'semodule -i /tmp/collectd_t.pp'
+  shell: 'semodule -i {{ dataverse.tmpdir }}/collectd_t.pp'
 
 - name: install collectd
   yum:

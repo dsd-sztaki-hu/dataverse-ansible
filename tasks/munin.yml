@@ -20,7 +20,7 @@
 - name: clone munin-monitoring repo
   git:
     repo: 'https://github.com/munin-monitoring/contrib.git'
-    dest: /tmp/munin-monitoring/
+    dest: '{{ dataverse.tmpdir }}/munin-monitoring/'
 
 - name: install jstat/jvm plugins
   copy:
@@ -31,7 +31,7 @@
     mode: '0755'
     remote_src: yes
   with_fileglob:
-  - /tmp/munin-monitoring/plugins/jvm/*
+  - '{{ dataverse.tmpdir }}/munin-monitoring/plugins/jvm/*'
 
 - name: enable jstat/jvm plugins
   file:

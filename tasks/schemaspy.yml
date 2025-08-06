@@ -3,12 +3,12 @@
 - name: download schemaspy
   get_url:
     url: '{{ schemaspy.jarurl }}'
-    dest: /tmp/schemaspy.jar
+    dest: '{{ dataverse.tmpdir }}/schemaspy.jar'
 
 - name: download jdbc driver
   get_url:
     url: 'https://jdbc.postgresql.org/download/postgresql-42.2.19.jar'
-    dest: /tmp/postgresql-42.2.19.jar
+    dest: '{{ dataverse.tmpdir }}/postgresql-42.2.19.jar'
 
 - name: ensure output dir exists
   file:
@@ -25,4 +25,4 @@
 
 - name: run schemaspy
   shell:
-    cmd: '/usr/bin/java -jar /tmp/schemaspy.jar -t pgsql -host {{ db.postgres.host }} -db {{ db.postgres.name }} -u {{ db.postgres.user }} -p {{ db.postgres.pass }} -s public -dp /tmp/postgresql-42.2.19.jar -o /var/www/html/schemaspy/{{ dataverse_branch }}'
+    cmd: '/usr/bin/java -jar {{ dataverse.tmpdir }}/schemaspy.jar -t pgsql -host {{ db.postgres.host }} -db {{ db.postgres.name }} -u {{ db.postgres.user }} -p {{ db.postgres.pass }} -s public -dp {{ dataverse.tmpdir }}/postgresql-42.2.19.jar -o /var/www/html/schemaspy/{{ dataverse_branch }}'

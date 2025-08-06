@@ -20,7 +20,7 @@
 - name: if we're not in a branch, grab release source
   get_url:
     url: 'https://github.com/IQSS/dataverse/archive/v{{ dataverse.version }}.tar.gz'
-    dest: '/tmp'
+    dest: '{{ dataverse.tmpdir }}'
   when: pom_xml.stat.exists == false
 
 - name: unarchive won't create directories for us
@@ -30,11 +30,11 @@
   when: pom_xml.stat.exists == false
 
 - name: unpack, strip root directory
-  shell: 'bsdtar --strip-components=1 -C {{ dataverse.srcdir }} -xf /tmp/dataverse-{{ dataverse.version }}.tar.gz'
+  shell: 'bsdtar --strip-components=1 -C {{ dataverse.srcdir }} -xf {{ dataverse.tmpdir }}/dataverse-{{ dataverse.version }}.tar.gz'
   when: pom_xml.stat.exists == false
 
 - name: ensure we have api script data directory
-  shell: "/bin/cp -r {{ dataverse.srcdir }}/scripts/api/data /tmp/dvinstall/"
+  shell: "/bin/cp -r {{ dataverse.srcdir }}/scripts/api/data {{ dataverse.tmpdir }}/dvinstall/"
 
 - name: set user management quesadilla
   uri:
@@ -53,7 +53,7 @@
 
 - name: is root dataverse already published
   stat:
-     path: /tmp/dataverse/root_dv_published
+     path: '{{ dataverse.srcdir }}/root_dv_published'
   register: root_dv_published
 
 - name: the root dataverse must be published

@@ -65,7 +65,7 @@
 - name: copy warfile over release
   copy:
     src: '{{ dataverse.srcdir }}/target/dataverse-{{ dataverse.version }}.war'
-    dest: '/tmp/dvinstall/dataverse.war'
+    dest: '{{ dataverse.tmpdir }}/dvinstall/dataverse.war'
     owner: root
     group: root
     mode: 0644

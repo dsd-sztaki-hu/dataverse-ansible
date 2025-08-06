@@ -44,14 +44,14 @@
   get_url:
     url: "{{ solr_download_url }}"
     checksum: "{{ dataverse.solr.checksum }}"
-    dest: /tmp/solr-{{ dataverse.solr.version }}.tgz
+    dest: '{{ dataverse.tmpdir }}/solr-{{ dataverse.solr.version }}.tgz'
   register: solr_installer_download
 
 - name: untar solr
   unarchive:
-    src: /tmp/solr-{{ dataverse.solr.version }}.tgz
+    src: '{{ dataverse.tmpdir }}/solr-{{ dataverse.solr.version }}.tgz'
     remote_src: true
-    dest: /tmp
+    dest: '{{ dataverse.tmpdir }}'
   when: solr_installer_download.changed
 
 - name: remove solr root directory
@@ -63,7 +63,7 @@
         owner=root group=root mode=0755
 
 - name: copy solr distro files into solr root
-  shell: "/bin/cp -r /tmp/solr-{{ dataverse.solr.version }}/* {{ dataverse.solr.root }}"
+  shell: "/bin/cp -r {{ dataverse.tmpdir }}/solr-{{ dataverse.solr.version }}/* {{ dataverse.solr.root }}"
   when: solr_installer_download.changed
 
 - name: mitigate CVE-2021-44228
@@ -100,12 +100,12 @@
     - "{{ dataverse.solr.root }}/server/solr/filestore"
     - "{{ dataverse.solr.root }}/server/solr/userfiles"
 
-- name: clean up solr distro files
-  file: path="/tmp/solr-{{ dataverse.solr.version }}" state=absent
+#- name: clean up solr distro files -- this is bad for idempotence
+#  file: path="{{ dataverse.tmpdir }}/solr-{{ dataverse.solr.version }}" state=absent
 
 - name: "release: identify solr schema files"
   find:
-    paths: /tmp/dvinstall/
+    paths: '{{ dataverse.tmpdir }}/dvinstall/'
     file_type: file
     use_regex: yes
     recurse: yes
@@ -151,7 +151,7 @@
 
 - name: "release: place solrconfig"
   copy:
-        src: "/tmp/dvinstall/solrconfig.xml"
+        src: "{{ dataverse.tmpdir }}/dvinstall/solrconfig.xml"
         dest: "{{ dataverse.solr.root }}/server/solr/collection1/conf/"
         owner: "{{ dataverse.solr.user }}"
         group: "{{ dataverse.solr.group }}"

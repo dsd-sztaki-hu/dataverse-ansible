@@ -5,7 +5,7 @@
     msg: '##### DATAVERSE LANGUAGES #####'
 
 - set_fact:
-    lang_git_dir: /usr/local/src/dataverse_language_packs
+    lang_git_dir: '{{ dataverse.tmpdir }}/dataverse_language_packs'
 
 - name: get dataverse language file path
   shell: "{{ payara_dir }}/bin/asadmin list-jvm-options | grep dataverse.lang.directory | sed 's/.*=//'"

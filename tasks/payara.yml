@@ -27,11 +27,11 @@
   get_url:
     url: '{{ dataverse.payara.zipurl }}'
     checksum: '{{ dataverse.payara.zipchecksum }}'
-    dest: /tmp/payara.zip
+    dest: '{{ dataverse.tmpdir }}/payara.zip'
   register: payara_zip_download
 
 - name: unzip to payara root without name/version tld
-  shell: 'bsdtar --strip-components=1 -C {{ payara_dir }} -xf /tmp/payara.zip'
+  shell: 'bsdtar --strip-components=1 -C {{ payara_dir }} -xf {{ dataverse.tmpdir }}/payara.zip'
   when: payara_zip_download.changed
   notify: enable and restart payara
 
