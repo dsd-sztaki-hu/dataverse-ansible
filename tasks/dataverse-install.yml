@@ -58,7 +58,7 @@
   copy:
     src: "{{ item }}"
     dest: "{{ dataverse.tmpdir }}/dvinstall/"
-'    remote_src: yes
+    remote_src: yes
   with_items:
     - "{{ dataverse.srcdir }}/conf/jhove/jhove.conf"
     - "{{ dataverse.srcdir }}/conf/jhove/jhoveConfig.xsd"
