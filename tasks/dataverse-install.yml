@@ -22,7 +22,7 @@
   when: dataverse_branch != "release"
   
 - name: fix perms on dataverse-war
-  file: path='{{ dataverse.srcdir }}/dvinstall/dataverse.war' mode=0644
+  file: path='{{ dataverse.tmpdir }}/dvinstall/dataverse.war' mode=0644
 
 - name: grab branch copies of installer source when using branch
   copy:
@@ -157,7 +157,7 @@
   become_user: '{{ dataverse.payara.user }}'
   args:
     chdir: '{{ dataverse.tmpdir }}/dvinstall'
-    register: dataverse_installer_was_run
+  register: dataverse_installer_was_run
   when: dataverse.deployment.upgrade_only is not defined or not dataverse.deployment.upgrade_only
 
 - name: upgrade only -- deploy dataverse war
