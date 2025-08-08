@@ -1,0 +1,10 @@
+---
+
+- name: generate initial admin API token
+  postgresql_query:
+    db: '{{ db.postgres.name }}'
+    login_user: '{{ db.postgres.user }}'
+    login_password: '{{ db.postgres.pass }}'
+    query: INSERT INTO apitoken (authenticateduser_id,createtime,disabled,expiretime,tokenstring) VALUES (1,now(),'f',now()+'1 hour',gen_random_uuid())
+
+- ansible.builtin.import_tasks: dataverse-apitoken.yml

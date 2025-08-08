@@ -1,3 +1,5 @@
+- ansible.builtin.import_tasks: dataverse-apitoken.yml
+  when: api_token is not defined or api_token == ''
 
 - name: define describo-related settings
   set_fact:
