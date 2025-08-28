@@ -1,29 +1,6 @@
 ---
 
-- name: get initial admin API token
-  postgresql_query:
-    db: '{{ db.postgres.name }}'
-    login_user: '{{ db.postgres.user }}'
-    login_password: '{{ db.postgres.pass }}'
-    query: select tokenstring from apitoken where authenticateduser_id = '1'
-  register: query_result
-
-- name: print result
-  set_fact:
-    queryresult_list: '{{ query_result.query_result }}'
-
-#- name: set api_token fact
-#  set_fact:
-#    api_token: '{{ item.tokenstring }}'
-#    cacheable: true
-#  with_items:
-#  - '{{ queryresult_list }}'
-#  when: query_result.rowcount > 0
-
-- name: calculate api_token
-  set_fact:
-    api_token: '{{ query_result.query_result[0].tokenstring }}'
-  when: query_result.rowcount == 1
+- ansible.builtin.import_tasks: dataverse-get-apitoken.yml
 
 - name: call apitoken generator if no apitoken in DB
   ansible.builtin.import_tasks: dataverse-generate-apitoken.yml
