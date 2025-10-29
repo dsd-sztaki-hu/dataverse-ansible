@@ -25,43 +25,43 @@
    - dataverse.handlenet.admcredfile is defined
 
 - name: get dataverse.handlenet.admcredfile value
-  shell: "{{ payara_dir }}/bin/asadmin list-jvm-options | grep dataverse.handlenet.admcredfile="
+  shell: "{{ payara_dir }}/bin/asadmin list-jvm-options | grep dataverse.pid.handlenet.key.path="
   register: admcredfile_value
   failed_when: false
   changed_when: false
 
 - name: delete dataverse.handlenet.admcredfile if changed
   shell: "{{ payara_dir }}/bin/asadmin delete-jvm-options '{{ admcredfile_value.stdout | trim }}'"
-  when: ( dataverse.handlenet.admcredfile is defined and ( admcredfile_value.stdout | trim ) != '-Ddataverse.handlenet.admcredfile='+dataverse.handlenet.admcredfile ) or ( dataverse.handlenet.admcredfile is not defined and ( admcredfile_value.stdout | trim ) != '' )
+  when: ( dataverse.handlenet.admcredfile is defined and ( admcredfile_value.stdout | trim ) != '-Ddataverse.pid.handlenet.key.path='+dataverse.handlenet.admcredfile ) or ( dataverse.handlenet.admcredfile is not defined and ( admcredfile_value.stdout | trim ) != '' )
 
 - name: set dataverse.handlenet.admcredfile if changed
-  shell: "{{ payara_dir }}/bin/asadmin create-jvm-options '-Ddataverse.handlenet.admcredfile={{ dataverse.handlenet.admcredfile }}'"
+  shell: "{{ payara_dir }}/bin/asadmin create-jvm-options '-Ddataverse.pid.handlenet.key.path={{ dataverse.handlenet.admcredfile }}'"
   when:
    - dataverse.handlenet.admcredfile is defined
-   - ( admcredfile_value.stdout | trim ) != '-Ddataverse.handlenet.admcredfile='+dataverse.handlenet.admcredfile
+   - ( admcredfile_value.stdout | trim ) != '-Ddataverse.pid.handlenet.key.path='+dataverse.handlenet.admcredfile
 
 - name: get dataverse.handlenet.admprivphrase value
-  shell: "{{ payara_dir }}/bin/asadmin list-jvm-options | grep dataverse.handlenet.admprivphrase="
+  shell: "{{ payara_dir }}/bin/asadmin list-jvm-options | grep dataverse.pid.handlenet.key.passphrase="
   register: admprivphrase_value
   failed_when: false
   changed_when: false
 
-- name: set dataverse.handlenet.admprivphrase if set and changed
+- name: set dataverse.pid.handlenet.key.passphrase if set and changed
   shell: "{{ payara_dir }}/bin/asadmin delete-jvm-options '{{ admprivphrase_value.stdout | trim }}' ;
-          {{ payara_dir }}/bin/asadmin create-jvm-options '-Ddataverse.handlenet.admprivphrase={{ dataverse.handlenet.admprivphrase }}'"
+          {{ payara_dir }}/bin/asadmin create-jvm-options '-Ddataverse.pid.handlenet.key.passphrase={{ dataverse.handlenet.admprivphrase }}'"
   when:
    - dataverse.handlenet.admprivphrase is defined
-   - ( admprivphrase_value.stdout | trim ) != '-Ddataverse.handlenet.admprivphrase='+dataverse.handlenet.admprivphrase
+   - ( admprivphrase_value.stdout | trim ) != '-Ddataverse.pid.handlenet.key.passphrase='+dataverse.handlenet.admprivphrase
 
-- name: get dataverse.handlenet.index value
-  shell: "{{ payara_dir }}/bin/asadmin list-jvm-options | grep dataverse.handlenet.index="
+- name: get dataverse.pid.handlenet.index value
+  shell: "{{ payara_dir }}/bin/asadmin list-jvm-options | grep dataverse.pid.handlenet.index="
   register: index_value
   failed_when: false
   changed_when: false
 
-- name: set dataverse.handlenet.index if set and changed
+- name: set dataverse.pid.handlenet.index if set and changed
   shell: "{{ payara_dir }}/bin/asadmin create-jvm-options '{{ index_value.stdout | trim }}' ;
-          {{ payara_dir }}/bin/asadmin create-jvm-options '-Ddataverse.handlenet.index={{ dataverse.handlenet.index }}'"
+          {{ payara_dir }}/bin/asadmin create-jvm-options '-Ddataverse.pid.handlenet.index={{ dataverse.handlenet.index }}'"
   when:
    - dataverse.handlenet.index is defined
-   - ( index_value.stdout | trim ) != '-Ddataverse.handlenet.index='+dataverse.handlenet.index
+   - ( index_value.stdout | trim ) != '-Ddataverse.pid.handlenet.index='+dataverse.handlenet.index
