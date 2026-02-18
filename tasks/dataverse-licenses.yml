@@ -23,7 +23,7 @@
     query: SELECT tokenstring FROM apitoken a JOIN authenticateduser u ON a.authenticateduser_id=u.id WHERE useridentifier='{{ dataverse.licenses.user }}' AND superuser
   changed_when: false
   register: token_result
-#  failed_when: token_result.rowcount != 1
+  failed_when: token_result.rowcount != 1
 
 - name: calculate api_token
   set_fact:
