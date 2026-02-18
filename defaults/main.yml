@@ -181,11 +181,11 @@ dataverse:
       label: "DataCite DOI"
       authority: yy.xxxxx
       shoulder: XXXX/
-        datacite:
-          mds_api_url: "https://mds.test.datacite.org/"
-          rest_api_url: "https://api.test.datacite.org"
-          username: "testaccount"
-          password: "notmypassword"
+      datacite:
+        mds_api_url: "https://mds.test.datacite.org/"
+        rest_api_url: "https://api.test.datacite.org"
+        username: "testaccount"
+        password: "notmypassword"
   externaltools:
     datacurationtool:
       enabled: false
