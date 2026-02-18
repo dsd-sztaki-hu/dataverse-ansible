@@ -39,14 +39,36 @@
 - name: datacite settings
   when: dataverse.pid[provider].type == 'datacite'
   block:
-   - fail: msg="datacite not supported yet"
+   - name: set {{ provider }}.datacite settings
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.datacite.{{ item }}' '{{ vars[\"providervar\"].datacite[item] }}'"
+     with_items:
+      - username
+      - password
+
+   - name: set {{ provider }}.datacite.mds-api-url
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.datacite.mds-api-url' '{{ providervar.datacite.mds_api_url }}'"
+
+   - name: set {{ provider }}.datacite.rest-api-url
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.datacite.rest-api-url' '{{ providervar.datacite.rest_api_url }}'"
 
 - name: ezid settings
   when: dataverse.pid[provider].type == 'ezid'
   block:
-   - fail: msg="datacite not supported yet"
+   - name: set {{ provider }}.ezid settings
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.ezid.{{ item }}' '{{ vars[\"providervar\"].ezid[item] }}'"
+     with_items:
+      - username
+      - password
+
+   - name: set {{ provider }}.ezid.api-url
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.ezid.api-url' '{{ providervar.ezid.api_url }}'"
 
 - name: perma settings
   when: dataverse.pid[provider].type == 'perma'
   block:
-   - fail: msg="permalinks not supported yet"
+   - name: set {{ provider }}.permalink.base-url
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.permalink.base-url' '{{ providervar.permalink.base_url }}'"
+
+   - name: set {{ provider }}.permalink.separator
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.permalink.separator' '{{ providervar.permalink.separator }}'"
+
