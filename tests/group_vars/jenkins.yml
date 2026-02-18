@@ -31,6 +31,10 @@ letsencrypt:
     autorenew: true
     email: 
     user: certbot
+    # Use the letsencrypt staging server for deployment tests
+    # to avoid rate limiting:
+    # https://letsencrypt.org/docs/duplicate-certificate-limit/
+    test_cert: false
 
 dataverse_misc_files_dir: '/opt/dv'
 
@@ -144,11 +148,11 @@ dataverse:
     launch_timeout: 180
     request_timeout: 1800
     siteurl: 
+    listen_address: 127.0.0.1
     root: /usr/local
     dir: payara6
-    #zipurl: https://nexus.payara.fish/repository/payara-community/fish/payara/distributions/payara/6.2023.8/payara-6.2023.8.zip
-    zipurl: https://mirrors.ibiblio.org/payara/payara-6.2023.8.zip
-    zipchecksum: sha256:108ed0fa7f97bb3833ff00610a4951dd41389e2647dffe28132ad54231af694a
+    zipurl: https://nexus.payara.fish/repository/payara-community/fish/payara/distributions/payara/6.2025.10/payara-6.2025.10.zip
+    zipchecksum: sha256:7478dd3870fde4f54e87675e4482950baa2c06bd1b6ba567e22676534fb3bbb6
   google_analytics_key:
   jacoco:
     enabled: true
@@ -239,13 +243,14 @@ dataverse:
   service_email: noreply@dataverse.yourinstitution.edu
   smtp: localhost
   solr:
-    download_url: https://archive.apache.org/dist/solr/solr/9.4.1/solr-9.4.1.tgz
+    #download_url: https://archive.apache.org/dist/solr/solr/9.8.0/solr-9.8.0.tgz
+    download_url: https://mirrors.ibiblio.org/dataverse_artifacts/solr/solr-9.8.0.tgz
     group: solr
     root: /usr/local/solr
     user: solr
-    version: 9.4.1
+    version: 9.8.0
     listen: 127.0.0.1
-    checksum: sha256:41015d7a693fefa4b8a537f5d0982adae8f13f382edf39c94a3497f9b3783250
+    checksum: sha256:9948dcf798c196b834c4cbb420d1ea5995479431669d266c33d46548b67e69e1
   srcdir: /opt/dataverse/dataverse
   thumbnails: false
   unittests:
@@ -255,7 +260,7 @@ dataverse:
   usermgmtkey: burrito
   deployment:
     upgrade_only: false
-  version: '6.3'
+  version: '6.9'
 
 build_guides: false
 
@@ -270,8 +275,9 @@ db:
     jdbcurl:
     log_lock_waits: true
     log_statements: all
-    version: 13
+    version: 16
     port: 5432
+    query_counts: true
     replication:
       enabled: false
       # all servers must be defined so firewalls may be opened accordingly
@@ -333,7 +339,7 @@ localstack:
       chunked_encoding: true
 
 maven:
-  version: 3.9.5
+  version: 3.9.12
 
 minio:
   enabled: true

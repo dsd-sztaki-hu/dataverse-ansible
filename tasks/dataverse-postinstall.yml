@@ -27,6 +27,11 @@
   become_user: "{{ dataverse.payara.user }}"
   shell: "{{ payara_dir }}/bin/asadmin set-log-levels org.glassfish.grizzly.http.server.util.RequestUtils=SEVERE"
 
+- name: set payara to default to localhost
+  become: yes
+  become_user: "{{ dataverse.payara.user }}"
+  shell: "{{ payara_dir }}/bin/asadmin set server-config.network-config.network-listeners.network-listener.http-listener-1.address={{ dataverse.payara.listen_address }}"
+
 - name: override some default settings
   become: yes
   become_user: "{{ dataverse.payara.user }}"
@@ -90,10 +95,7 @@
     state: started
   register: payara_start
 
-- name: give Payara ample time to become ready
-  ansible.builtin.pause:
-    seconds: 120
-  when: payara_start.changed
+- ansible.builtin.import_tasks: check_index_status.yml
 
 - name: start solr indexing -- if this was an upgrade to an existing install, the install scripts reset the solr indexes
   ansible.builtin.get_url:

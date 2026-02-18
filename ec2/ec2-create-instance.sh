@@ -9,10 +9,8 @@ PEM_DEFAULT=${HOME}
 VERBOSE_ARG=""
 DATAVERSE_TEMPDIR=/tmp
 
-# rocky linux 9.4 official, us-east-1
-AWS_AMI_DEFAULT='ami-09fb459fad4613d55'
-# let's stick with rocky 8.9 until ITs pass
-#AWS_AMI_DEFAULT='ami-0408f4c4a072e3fb9'
+# rocky linux 9.6 official, us-east-1
+AWS_AMI_DEFAULT='ami-08ace1224b75d38c1'
 
 usage() {
   echo "Usage: $0 -b <branch> -r <repo> -p <pem_path> -g <group_vars> -a <dataverse-ansible branch> -i aws_image -u aws_user -s aws_size -t aws_tag -f aws_security group -e aws_profile -l local_log_path -d -v" 1>&2
@@ -284,9 +282,15 @@ if [ -z "$DESTROY" ]; then
    echo "ssh -i $PEM_FILE $USER_AT_HOST"
    echo "When you are done, please terminate your instance with:"
    echo "$DESTROY_CMD"
+   if [ -z "$PEM_PATH" ]; then
+       echo "aws $PROFILE ec2 delete-key-pair --key-name $KEY_NAME"
+    fi
 else
    echo "destroying AWS instance"
    eval $DESTROY_CMD
+   if [ -z "$PEM_PATH" ]; then
+        aws $PROFILE ec2 delete-key-pair --key-name $KEY_NAME
+      fi
    echo "removing EC2 PEM"
    rm -f $PEM_FILE
 fi
