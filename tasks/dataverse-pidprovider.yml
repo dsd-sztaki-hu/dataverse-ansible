@@ -1,0 +1,52 @@
+- set_fact:
+    providervar: "{{ dataverse.pid[provider] }}"
+
+#- name: set dataverse.pid.handlenet.index
+#  shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.handlenet.index' '{{ providervar.handlenet.index }}'"
+
+- name: set common {{ provider }} settings
+  shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.{{ item }}' '{{ vars[\"providervar\"][item] }}'"
+  with_items:
+    - type
+    - label
+    - authority
+    - shoulder
+
+- name: handlenet settings
+  when: dataverse.pid[provider].type == 'hdl'
+  block:
+   - name: set {{ provider }}.handlenet settings
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.handlenet.{{ item }}' '{{ vars[\"providervar\"].handlenet[item] }}'"
+     with_items:
+      - index
+
+   - name: set {{ provider }}.handlenet settings
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.handlenet.auth-handle' '{{ providervar.handlenet.auth_handle }}'"
+
+   - name: set {{ provider }}.handlenet.key settings
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.handlenet.key.{{ item }}' '{{ vars[\"providervar\"].handlenet.key[item] }}'; \
+             asadmin-create-or-replace-option.sh 'dataverse.pid.handlenet.key.{{ item }}' '{{ vars[\"providervar\"].handlenet.key[item] }}'"
+     with_items:
+       - path
+       - passphrase
+#     when: providervar.handlenet.key[item] is defined ## both must be set, or dataverse halts
+
+   - name: copy {{ provider }}.handlenet.key
+     copy:
+       src: "{{ providervar.handlenet.key.source_path }}"
+       dest: "{{ providervar.handlenet.key.path }}"
+
+- name: datacite settings
+  when: dataverse.pid[provider].type == 'datacite'
+  block:
+   - fail: msg="datacite not supported yet"
+
+- name: ezid settings
+  when: dataverse.pid[provider].type == 'ezid'
+  block:
+   - fail: msg="datacite not supported yet"
+
+- name: perma settings
+  when: dataverse.pid[provider].type == 'perma'
+  block:
+   - fail: msg="permalinks not supported yet"

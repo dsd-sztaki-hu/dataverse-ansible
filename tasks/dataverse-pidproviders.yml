@@ -1,0 +1,20 @@
+
+#- set_fact:
+#   #### we currently only handle the default provider -- this needs a better solution
+#   provider: "{{ dataverse.pid.default_provider }}"
+
+- debug: msg="{{ dataverse.pid }}"
+
+- name: set default-provider
+  shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.default-provider' '{{ dataverse.pid.default_provider }}'"
+
+- name: set providers
+  shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.providers' '{{ dataverse.pid.providers }}'"
+
+
+- name: handle each pid-provider
+  include_tasks: dataverse-pidprovider.yml
+  loop: '{{ dataverse.pid.providers.split(",") }}'
+  loop_control:
+    loop_var: provider
+

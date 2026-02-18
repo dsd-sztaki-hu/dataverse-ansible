@@ -71,14 +71,6 @@
   tags:
   - payara
 
-- ansible.builtin.import_tasks: tasks/extra-certificate-authorities.yml
-  when:
-   - extra_certificates is defined
-   - extra_certificates.files is defined
-   - extra_certificates.files
-  tags:
-   - extracerts
-
 - ansible.builtin.import_tasks: solr.yml
   tags:
   - solr
@@ -87,11 +79,6 @@
   when: localstack.enabled == true
   tags:
   - localstack
-
-- ansible.builtin.import_tasks: s3.yml
-  when: s3 is defined and s3 | length > 0 and s3[0].enabled == true
-  tags:
-  - s3
 
 - ansible.builtin.import_tasks: swift.yml
   when: swift.enabled == true
@@ -108,9 +95,25 @@
   tags:
   - minio
 
+- ansible.builtin.import_tasks: dataverse-pidproviders.yml
+  tags: hdl, handle, pid, pidprovider, pidproviders
+
 - ansible.builtin.import_tasks: dataverse-install.yml
   tags:
   - dataverse
+
+- ansible.builtin.import_tasks: tasks/extra-certificate-authorities.yml
+  when:
+   - extra_certificates is defined
+   - extra_certificates.files is defined
+   - extra_certificates.files
+  tags:
+   - extracerts
+
+- ansible.builtin.import_tasks: s3.yml
+  when: s3 is defined and s3 | length > 0 and s3[0].enabled == true
+  tags:
+  - s3
 
 - ansible.builtin.import_tasks: dataverse-storage.yml
   when: dataverse.filesdirs[0] is defined
