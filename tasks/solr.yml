@@ -5,11 +5,18 @@
   debug:
     msg: '##### SOLR #####'
 
+- name: check if solr directory exists
+  stat:
+    path: "{{ dataverse.solr.root }}"
+  failed_when: false
+  register: solr_dir
+
 - name: if solr directory already exists, make a backup of the indexes within
-  shell: "[ -d {{ dataverse.solr.root }} ] && tar czf /var/backups/solr_`date +%Y%m%d_%H%M%S`.tar.gz {{ dataverse.solr.root }}/server/solr/"
+  shell: "if [[ -d {{ dataverse.solr.root }} ]] ; then tar czf /var/backups/solr_`date +%Y%m%d_%H%M%S`.tar.gz {{ dataverse.solr.root }}/server/solr/ ; fi"
   when:
    - dataverse.solr.backup is defined
    - dataverse.solr.backup
+  failed_when: false
 
 - name: ensure EPEL repository for RedHat/Rocky
   yum: name=epel-release state=latest
@@ -64,7 +71,7 @@
 
 - name: copy solr distro files into solr root
   shell: "/bin/cp -r {{ dataverse.tmpdir }}/solr-{{ dataverse.solr.version }}/* {{ dataverse.solr.root }}"
-  when: solr_installer_download.changed
+  when: solr_installer_download.changed or not solr_dir.stat.exists
 
 - name: mitigate CVE-2021-44228
   ansible.builtin.lineinfile:
@@ -85,7 +92,7 @@
 
 - name: populate collection1
   shell: "/bin/cp -r {{ dataverse.solr.root }}/server/solr/configsets/_default {{ dataverse.solr.root }}/server/solr/collection1"
-  when: solr_installer_download.changed
+  when: solr_installer_download.changed or solr_dir.changed or not solr_dir.stat.exists
 
 - name: chown some subdirectories to solr service account
   ansible.builtin.file:
@@ -99,6 +106,15 @@
     - "{{ dataverse.solr.root }}/server/solr/collection1"
     - "{{ dataverse.solr.root }}/server/solr/filestore"
     - "{{ dataverse.solr.root }}/server/solr/userfiles"
+
+- name: chmod conf subdir
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: "g+w"
+  with_items:
+    - "{{ dataverse.solr.root }}/server/solr/collection1/conf"
+    - "{{ dataverse.solr.root }}/server/solr/collection1/conf/schema.xml"
+    - "{{ dataverse.solr.root }}/server/solr/collection1/conf/solrconfig.xml"
 
 #- name: clean up solr distro files -- this is bad for idempotence
 #  file: path="{{ dataverse.tmpdir }}/solr-{{ dataverse.solr.version }}" state=absent
@@ -139,7 +155,7 @@
 - name: "branch: place solr schema files"
   copy:
     src: '{{ item }}'
-    dest: '{{ dataverse.solr.root }}/server/solr/collection1/conf'
+    dest: '{{ dataverse.solr.root }}/server/solr/collection1/conf/'
     owner: '{{ dataverse.solr.user }}'
     group: '{{ dataverse.solr.group }}'
     mode: 0644
