@@ -8,6 +8,7 @@
 - name: payara_dir must exist
   file: path={{ payara_dir }} state=directory
         owner=root group=root mode=0755
+  register: payara_dir_state
 
 - name: install bsdtar on RedHat
   package:
@@ -32,7 +33,7 @@
 
 - name: unzip to payara root without name/version tld
   shell: 'bsdtar --strip-components=1 -C {{ payara_dir }} -xf {{ dataverse.tmpdir }}/payara.zip'
-  when: payara_zip_download.changed
+  when: payara_zip_download.changed or payara_dir_state.changed
   notify: enable and restart payara
 
 - name: ensure service account and group exist
@@ -135,11 +136,12 @@
 
 - name: workaround for FISH-7665
   lineinfile:
-    path: '{{ payara_dir }}/glassfish/config/asenv.conf'
+    path: '{{ payara_dir }}/glassfish/domains/{{ dataverse.payara.domain }}/config/asenv.conf'
     line: '{{ item }}'
   with_items:
     - 'export JAVA_TOOL_OPTIONS'
     - 'JAVA_TOOL_OPTIONS="-Djdk.util.zip.disableZip64ExtraFieldValidation=true --add-opens=java.base/java.io=ALL-UNNAMED"'
+  failed_when: false
   when: dataverse.payara.zipurl is match(".*payara-6.*")
 
 - name: so installations can still install payara5 if they want
