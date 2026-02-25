@@ -41,6 +41,18 @@
     chdir: '{{ dataverse.srcdir }}'
   become: true
   become_user: '{{ dataverse.payara.user }}'
+  register: add_iqss_upstream
+  failed_when:
+   - add_iqss_upstream.rc != 0
+   - add_iqss_upstream.stderr != 'error:'+' remote upstream already exists.'
+  changed_when: add_iqss_upstream.rc == 0
+  when: dataverse.merge_upstream
+
+#- debug: msg="{{add_iqss_upstream.rc}}"
+#- debug: msg="{{add_iqss_upstream.rc != 0}}"
+#- debug: msg="{{add_iqss_upstream.stderr}}"
+#- debug: msg="{{add_iqss_upstream.stderr != 'error:'+' remote upstream already exists.'}}"
+#- fail:
 
 - name: fetch upstream
   ansible.builtin.command:
@@ -49,6 +61,7 @@
     chdir: '{{ dataverse.srcdir }}'
   become: true
   become_user: '{{ dataverse.payara.user }}'
+  when: dataverse.merge_upstream
 
 - name: merge remote PR with develop
   ansible.builtin.command:
@@ -57,3 +70,4 @@
     chdir: '{{ dataverse.srcdir }}'
   become: true
   become_user: '{{ dataverse.payara.user }}'
+  when: dataverse.merge_upstream
