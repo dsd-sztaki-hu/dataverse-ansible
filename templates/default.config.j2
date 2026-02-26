@@ -28,8 +28,8 @@ RSERVE_USER = {{ rserve.user }}
 RSERVE_PASSWORD = {{ rserve.pass }}
 
 [doi]
-DOI_USERNAME = {{ dataverse.doi.username }}
-DOI_PASSWORD = {{ dataverse.doi.password }}
-DOI_BASEURL = {{ dataverse.doi.baseurl }}
-DOI_MDCBASEURL = {{ dataverse.doi.mdcbaseurl }}
-DOI_DATACITERESTAPIURL = {{ dataverse.doi.dataciterestapiurl }}
+DOI_USERNAME = {{ dataverse.pid[dataverse.pid.default_provider].datacite.username if dataverse.pid[dataverse.pid.default_provider].datacite is defined else 'x' }}
+DOI_PASSWORD = {{ dataverse.pid[dataverse.pid.default_provider].datacite.password if dataverse.pid[dataverse.pid.default_provider].datacite is defined else 'x' }}
+DOI_BASEURL = {{ dataverse.pid[dataverse.pid.default_provider].datacite.mds_api_url if dataverse.pid[dataverse.pid.default_provider].datacite is defined else 'https://mds.test.datacite.org/' }}
+DOI_MDCBASEURL = {{ dataverse.pid[dataverse.pid.default_provider].datacite.rest_api_url if dataverse.pid[dataverse.pid.default_provider].datacite is defined else 'https://api.test.datacite.org/' }}
+DOI_DATACITERESTAPIURL = {{ dataverse.pid[dataverse.pid.default_provider].datacite.rest_api_url if dataverse.pid[dataverse.pid.default_provider].datacite is defined else 'https://api.test.datacite.org' }}
