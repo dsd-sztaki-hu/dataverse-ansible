@@ -97,3 +97,10 @@
   when:
    - dataverse_installer_was_run is defined
    - dataverse_installer_was_run is succeeded
+
+- name: create docroot/logos directory
+  file:
+    path: '{{ payara_dir }}/glassfish/domains/{{ dataverse.payara.domain }}/docroot/logos'
+    state: directory
+    owner: '{{ dataverse.payara.user }}'
+    group: '{{ dataverse.payara.group }}'
