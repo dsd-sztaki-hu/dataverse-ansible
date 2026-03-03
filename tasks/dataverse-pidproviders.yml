@@ -3,7 +3,7 @@
 #   #### we currently only handle the default provider -- this needs a better solution
 #   provider: "{{ dataverse.pid.default_provider }}"
 
-- debug: msg="{{ dataverse.pid }}"
+#- debug: msg="{{ dataverse.pid }}"
 
 - name: set default-provider
   shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.default-provider' '{{ dataverse.pid.default_provider }}'"
