@@ -16,9 +16,11 @@
   when: dataverse.pid[provider].type == 'hdl'
   block:
    - name: set {{ provider }}.handlenet settings
-     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.handlenet.{{ item }}' '{{ vars[\"providervar\"].handlenet[item] }}'"
-     with_items:
-      - index
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.handlenet.index' '{{ vars[\"providervar\"].handlenet.index }}'"
+
+   - name: set {{ provider }}.handlenet settings
+     shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.handlenet.index' '{{ vars[\"providervar\"].handlenet.index }}'"
+     when: provider == dataverse.pid.default_provider
 
    - name: set {{ provider }}.handlenet settings
      shell: "asadmin-create-or-replace-option.sh 'dataverse.pid.{{ provider }}.handlenet.auth-handle' '{{ providervar.handlenet.auth_handle }}'"
