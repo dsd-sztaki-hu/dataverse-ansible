@@ -4,6 +4,12 @@ OPTION=$1
 VALUE=`echo "$2" | sed 's/:/\\:/g'`
 ESCVALUE=`echo "$VALUE" | sed 's/:/\\\\:/g'`
 
+if [[ `{{ payara_dir}}/bin/asadmin list-jvm-options | grep -c "^-D$OPTION="` -ge 2 ]]
+then
+	echo "\-D$OPTION=" specified more then once -- deleting all not matching "$VALUE"
+	OTHERVALUE=`{{ payara_dir}}/bin/asadmin list-jvm-options | grep "^-D$OPTION=" | grep -v "^-D$OPTION=$VALUE$" | sed 's/:/\\:/g'`
+	[ "$OTHERVALUE" ] && {{ payara_dir}}/bin/asadmin delete-jvm-options "$OTHERVALUE"
+fi
 
 if {{ payara_dir}}/bin/asadmin list-jvm-options | grep -q "^-D$OPTION=$VALUE$"
 then
