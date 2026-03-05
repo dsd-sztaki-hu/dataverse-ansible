@@ -97,6 +97,9 @@
   tags:
   - dataverse
 
+# We need this because the installer adds the fake provider
+- ansible.builtin.import_tasks: dataverse-pidproviders.yml
+
 - ansible.builtin.import_tasks: tasks/extra-certificate-authorities.yml
   when:
    - extra_certificates is defined
