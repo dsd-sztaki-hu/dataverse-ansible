@@ -261,6 +261,7 @@ dataverse:
     custom_samplefiles: "{{ playbook_dir }}/custom_sampledata/files"
   service_email: noreply@dataverse.yourinstitution.edu
   smtp: localhost # or the FQDN of your organization's SMTP relay
+  allow_utf8_addresses: true
   solr:
     download_url: https://archive.apache.org/dist/solr/solr/9.8.0/solr-9.8.0.tgz
     group: solr

@@ -51,6 +51,11 @@
   shell: 'asadmin-create-or-replace-option.sh "dataverse.feature.index-harvested-metadata-source" "true"'
   when: dataverse.api.test_suite == true
 
+- name: set dataverse.mail.mta.allow-utf8-addresses
+  become: yes
+  become_user: "{{ dataverse.payara.user }}"
+  shell: 'asadmin-create-or-replace-option.sh "dataverse.mail.mta.allow-utf8-addresses" "{{ dataverse.allow_utf8_addresses }}"'
+
 - name: set showListFirst value in the deployed idpselect_config.js
   lineinfile:
     path: '{{ payara_dir }}/glassfish/domains/{{ dataverse.payara.domain }}/applications/dataverse/resources/js/shib/idpselect_config.js'
