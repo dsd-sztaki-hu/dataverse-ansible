@@ -226,4 +226,8 @@
   - schemaspy
 
 - ansible.builtin.import_tasks: fin.yml
-  
+
+- ansible.builtin.import_tasks: dataverse-optional-settings.yml
+  tags:
+  - never
+  - optional-settings
