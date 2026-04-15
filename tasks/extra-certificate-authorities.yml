@@ -16,17 +16,6 @@
   with_items: '{{ extra_certificates.files }}'
   register: certfiles
 
-- name: add certificates to java keystores
-  community.general.java_cert:
-    cert_path: /opt/certs/{{ item.0 }}
-    keystore_path: '{{ item.1.path }}'
-    cert_alias: '{{ item.0 }}'
-    keystore_pass: '{{ item.1.pass }}'
-    state: present
-#  when: certfiles.changed
-  loop: "{{ extra_certificates.files | product(extra_certificates.java_keystores) | list }}"
-  notify: enable and restart payara
-
 - name: add certificate to system keystore on debian/ubuntu
   copy:
     src: '{{ item }}'
@@ -40,5 +29,16 @@
   when:
    - ansible_os_family == "Debian"
    - system_cert_upload.changed
+
+- name: add certificates to java keystores
+  community.general.java_cert:
+    cert_path: /opt/certs/{{ item.0 }}
+    keystore_path: '{{ item.1.path }}'
+    cert_alias: '{{ item.0 }}'
+    keystore_pass: '{{ item.1.pass }}'
+    state: present
+#  when: certfiles.changed
+  loop: "{{ extra_certificates.files | product(extra_certificates.java_keystores) | list }}"
+  notify: enable and restart payara
 
 ## TODO: we may want to add to system keystore for redhat
