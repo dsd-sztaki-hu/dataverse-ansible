@@ -91,6 +91,7 @@ Listen {{ apache.ssl.port }} https
   # allow aroma and docs
   ProxyPassMatch ^/aroma !
   ProxyPassMatch ^/search-documentation !
+  ProxyPassMatch ^/rockit !
   ProxyPassMatch ^/documentation !
 
   # allow munin
